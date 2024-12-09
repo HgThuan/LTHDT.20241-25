@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
@@ -25,8 +25,9 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        Rectangle test = new Rectangle(100, 100, 100, 100);
-        pane.getChildren().add(test);
+        
+        Antigen test = new Antigen(new Location(100, 100), 10, Color.RED);
+        test.draw(pane);
         //
         root.getChildren().add(pane);
         scene = new Scene(root, 640, 480);
