@@ -1,20 +1,53 @@
 package n25;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
-public class VirusComponent {
+public abstract class VirusComponent {
     Location center;
     int radius;
-    SubComponent subComponent[];
-    Shape[] shapes;
+    Pane area;
+    List<SubComponent> subComponent = new ArrayList<>();
+    List<Shape> shapes = new ArrayList<>();
 
     public void relocate(Location location)
     {
-        center.setLocation(location);
-        for (int i = 0; i < subComponent.length; i++)
-        {
-            int[] directions = Location.toDirection(center, location);
-            subComponent[i].relocate(directions[0], directions[1]);
-        }    
+        center.move(location);
+        for (SubComponent sub : subComponent) {
+            sub.relocate(Location.subtract(center, sub.location));
+        }
+        for (Shape shape : shapes) {
+            shape.relocate(shape.getLayoutX() + location.x, shape.getLayoutY() + location.y);
+        }
     }
+
+    public void relocate(vector2D vector)
+    {
+        center.move(vector);
+        for (SubComponent sub : subComponent) {
+            sub.relocate(vector);
+        }
+        for (Shape shape : shapes) {
+            shape.relocate(shape.getLayoutX() + vector.x, shape.getLayoutY() + vector.y);
+        }
+    }
+
+    public void dispose()
+    {
+        for (SubComponent sub : subComponent) {
+            sub.dispose();
+        }
+        for (Shape shape : shapes) {
+            area.getChildren().remove(shape);
+        }
+        subComponent.clear();
+        shapes.clear();
+    }
+
+    public abstract void changeStage(int stage);
+
+    public abstract void draw(Pane area);
 }

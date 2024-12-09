@@ -22,36 +22,20 @@ public class Location {
         this.y = y;
     }
 
-    // Đặt vị trí mới cho đối tượng
-    public void setLocation(Location location) {
+    // Đặt lại vị trí đối tượng
+    public void move(Location location) {
         this.x = location.x;
         this.y = location.y;
     }
 
-    // Lấy vị trí hiện tại
-    public Location getLocation() {
-        return new Location(this.x, this.y);
+    // Di chuyển đối tượng theo vector
+    public void move(vector2D vector) {
+        this.x += vector.x;
+        this.y += vector.y;
     }
 
-    // Di chuyển đối tượng theo x, y
-    public void move(int x, int y) {
-        this.x += x;
-        this.y += y;
-    }
-
-    // Di chuyển đối tượng theo hướng và khoảng cách
-    public void moveDirection(int direction, int distance) {
-        int moveX = distance * (int) Math.cos(Math.toRadians(direction));
-        int moveY = distance * (int) Math.sin(Math.toRadians(direction));
-        this.move(moveX, moveY);
-    }
-
-    // Chuyển từ di chuyển theo tọa độ sang di chuyển theo hướng
-    public static int[] toDirection(Location oldLocation, Location newLocation) {
-        int x = newLocation.x - oldLocation.x;
-        int y = newLocation.y - oldLocation.y;
-        int distance = (int) Math.sqrt(x * x + y * y);
-        int direction = (int) Math.toDegrees(Math.atan2(y, x));
-        return new int[] {direction, distance};
+    // Trừ 2 vị trí
+    public static vector2D subtract(Location start, Location end) {
+        return new vector2D(end.x - start.x, end.y - start.y);
     }
 }
