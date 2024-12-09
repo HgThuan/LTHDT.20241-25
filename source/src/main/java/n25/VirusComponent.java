@@ -12,6 +12,7 @@ public abstract class VirusComponent {
     Pane area;
     List<SubComponent> subComponent = new ArrayList<>();
     List<Shape> shapes = new ArrayList<>();
+    int stage = 0;
 
     public void relocate(Location location)
     {
@@ -47,7 +48,13 @@ public abstract class VirusComponent {
         shapes.clear();
     }
 
-    public abstract void changeStage(int stage);
+    public void changeStage(int stage){
+        this.stage = stage;
+        if (subComponent.size() + shapes.size() == 0) {
+            return;
+        }
+        draw(area);
+    }
 
     public abstract void draw(Pane area);
 }
