@@ -1,6 +1,6 @@
-package n07;
+package n25;
 
-public class Location {
+public class Location {    
     public int x;
     public int y;
 

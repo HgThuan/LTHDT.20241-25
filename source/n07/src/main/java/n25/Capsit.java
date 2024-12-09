@@ -1,4 +1,4 @@
-package n07;
+package n25;
 
 public class Capsit {
     

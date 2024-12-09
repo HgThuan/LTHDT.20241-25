@@ -3,6 +3,6 @@ module n07 {
     requires javafx.fxml;
     requires transitive javafx.graphics;
     
-    opens n07 to javafx.fxml;
-    exports n07;
+    opens n25 to javafx.fxml;
+    exports n25;
 }

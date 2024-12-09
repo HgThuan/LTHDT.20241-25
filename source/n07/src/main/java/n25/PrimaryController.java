@@ -1,4 +1,4 @@
-package n07;
+package n25;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
