@@ -3,13 +3,8 @@ package n07;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 
-public class Antigen {
-    Shape[] shapes;
-    Location location;
-    int unitSize;
-    Color color;
+public class Antigen extends SubComponent {
 
     public Antigen(Location location, int unitSize, Color color) {
         this.location = location;
@@ -22,12 +17,5 @@ public class Antigen {
         circle.setFill(color);
         pane.getChildren().add(circle);
         shapes[0] = circle;
-    }
-
-    public void relocate(int direction, int distance) {
-        location.moveDirection(direction, distance);
-        for (Shape shape : shapes) {
-            shape.relocate(location.x, location.y);
-        }
     }
 }
