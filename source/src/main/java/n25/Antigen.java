@@ -16,6 +16,6 @@ public class Antigen extends SubComponent {
         Circle circle = new Circle(location.x, location.y, unitSize * 1.25);
         circle.setFill(color);
         pane.getChildren().add(circle);
-        shapes[0] = circle;
+        shapes.add(circle);
     }
 }
