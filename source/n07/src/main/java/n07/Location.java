@@ -45,4 +45,13 @@ public class Location {
         int moveY = distance * (int) Math.sin(Math.toRadians(direction));
         this.move(moveX, moveY);
     }
+
+    // Chuyển từ di chuyển theo tọa độ sang di chuyển theo hướng
+    public static int[] toDirection(Location oldLocation, Location newLocation) {
+        int x = newLocation.x - oldLocation.x;
+        int y = newLocation.y - oldLocation.y;
+        int distance = (int) Math.sqrt(x * x + y * y);
+        int direction = (int) Math.toDegrees(Math.atan2(y, x));
+        return new int[] {direction, distance};
+    }
 }
