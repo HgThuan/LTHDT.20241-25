@@ -1,5 +1,5 @@
 package n07;
-
+/* abc abc abc */
 public class Location {
     public int x;
     public int y;
