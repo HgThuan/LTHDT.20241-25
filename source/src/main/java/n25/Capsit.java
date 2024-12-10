@@ -1,5 +1,7 @@
 package n25;
 
+import java.util.List;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -10,23 +12,19 @@ public class Capsit extends VirusComponent {
     public final int HEXAGON_STAGE = 1;
 
     public Capsit(Location center, int radius, int unitSize, Pane area, Color color) {
-        this.center = center;
-        this.radius = radius;
-        this.unitSize = unitSize;
-        this.area = area;
-        this.color = color;
+        super(center, radius, unitSize, area, color);
     }
 
-    public void draw(Pane area) {
+    public void draw(Pane area, List<SubComponent> subComponent) {
         this.area = area;
         for (Shape shape : shapes) {
             area.getChildren().remove(shape);
         }
         shapes.clear();
-        for (SubComponent sub : subComponent) {
+        for (SubComponent sub : this.subComponent) {
             sub.dispose();
         }
-        subComponent.clear();
+        this.subComponent.clear();
 
         switch (stage) {
             case 0:
@@ -64,6 +62,12 @@ public class Capsit extends VirusComponent {
                 break;
             default:
                 break;
-        }    
+        }
+        if (subComponent != null) {
+            for (SubComponent sub : subComponent) {
+                this.subComponent.add(sub);
+                sub.draw(area);
+            }
+        }
     }
 }

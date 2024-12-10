@@ -17,6 +17,15 @@ public abstract class VirusComponent {
     protected int stage = 0;
     protected Color color;
 
+    public VirusComponent(Location center, int radius, int unitSize, Pane area, Color color)
+    {
+        this.center = center;
+        this.radius = radius;
+        this.unitSize = unitSize;
+        this.area = area;
+        this.color = color;
+    }
+
     public void relocate(Location location)
     {
         center.move(location);
@@ -51,13 +60,5 @@ public abstract class VirusComponent {
         shapes.clear();
     }
 
-    public void changeStage(int stage){
-        this.stage = stage;
-        if (subComponent.size() + shapes.size() == 0) {
-            return;
-        }
-        draw(area);
-    }
-
-    public abstract void draw(Pane area);
+    public abstract void draw(Pane area, List<SubComponent> subComponent);
 }
