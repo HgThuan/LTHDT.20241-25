@@ -8,11 +8,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public abstract class SubComponent {
-    Location location;
-    int unitSize;
-    Color color;
-    Pane area;
-    List<Shape> shapes = new ArrayList<>();
+    protected Location location;
+    protected int unitSize;
+    protected Color color;
+    protected Pane area;
+    protected List<Shape> shapes = new ArrayList<>();
 
     public abstract void draw(Pane area);
     

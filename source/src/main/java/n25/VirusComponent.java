@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public abstract class VirusComponent {
-    Location center;
-    int radius;
-    Pane area;
-    List<SubComponent> subComponent = new ArrayList<>();
-    List<Shape> shapes = new ArrayList<>();
-    int stage = 0;
+    protected Location center;
+    protected int radius;
+    protected int unitSize;
+    protected Pane area;
+    protected List<SubComponent> subComponent = new ArrayList<>();
+    protected List<Shape> shapes = new ArrayList<>();
+    protected int stage = 0;
+    protected Color color;
 
     public void relocate(Location location)
     {
