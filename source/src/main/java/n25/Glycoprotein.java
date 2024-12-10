@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class Glycoprotein extends SubComponent {
-    private int direction;
+    private final int direction;
     private double rotationAngle;
     public Glycoprotein(Location location, int direction, int unitSize, Color color){
         this.location = location;
@@ -13,7 +13,7 @@ public class Glycoprotein extends SubComponent {
         this.unitSize = unitSize;
         this.color = color;
     }
-
+    @Override
     public void draw(Pane pane){
         //draw rectangle
         Rectangle rectangle = new Rectangle(location.x, location.y, unitSize * 2, unitSize * 0.5);
