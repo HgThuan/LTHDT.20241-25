@@ -25,8 +25,7 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        
-        Antigen test = new Antigen(new Location(100, 100), 10, Color.RED);
+        Glycoprotein test = new Glycoprotein(new Location(100,100), 45, 10, Color.RED);
         test.draw(pane);
         //
         root.getChildren().add(pane);
