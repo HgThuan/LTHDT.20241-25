@@ -25,16 +25,16 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        MatrixProtein matrixProtein = new MatrixProtein(new Location(200, 200), 135, 5, pane, Color.BLUE);
-        matrixProtein.draw(pane, null);
-        Capsit capsit = new Capsit(new Location(200, 200), 100, 5, pane, Color.RED);
-        capsit.draw(pane, null);
+        Capsit capsit = new Capsit(new Location(200, 200), 150, 5, pane, Color.BLUE);
+        capsit.setComponentStage(ComponentStage.HEXAGON_STAGE);
+        capsit.draw(pane, SubComponentType.ANTIGEN);
+
         //
         root.getChildren().add(pane);
         scene = new Scene(root, 640, 480);
         stage.setScene(scene);
         stage.show();
-    }
+    }   
 
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));

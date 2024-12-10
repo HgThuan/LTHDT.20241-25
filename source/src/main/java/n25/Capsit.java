@@ -1,30 +1,26 @@
 package n25;
 
-import java.util.List;
-
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
 public class Capsit extends VirusComponent {
-    public final int CIRCLE_STAGE = 0;
-    public final int HEXAGON_STAGE = 1;
 
     public Capsit(Location center, int radius, int unitSize, Pane area, Color color) {
         super(center, radius, unitSize, area, color);
     }
 
-    public void draw(Pane area, List<SubComponent> subComponent) {
+    public void draw(Pane area, int subComponentType) {
         this.area = area;
         for (Shape shape : shapes) {
             area.getChildren().remove(shape);
         }
         shapes.clear();
-        for (SubComponent sub : this.subComponent) {
+        for (SubComponent sub : subComponent) {
             sub.dispose();
         }
-        this.subComponent.clear();
+        subComponent.clear();
 
         switch (stage) {
             case 0:
@@ -40,6 +36,14 @@ public class Capsit extends VirusComponent {
                     circle.setFill(color);
                     shapes.add(circle);
                     area.getChildren().add(circle);
+                }
+                if (subComponentType == SubComponentType.ANTIGEN)
+                {
+                    for (int i = 0; i < 20; i++) {
+                        Location location = new Location(center.x + (int) (radius * Math.cos(Math.toRadians(i * 20))), center.y + (int) (radius * Math.sin(Math.toRadians(i * 20))));
+                        Antigen antigen = new Antigen(location, unitSize, Color.RED);
+                        subComponent.add(antigen);
+                    }
                 }
                 break;
             case 1:
@@ -58,6 +62,15 @@ public class Capsit extends VirusComponent {
                         shapes.add(circle);
                         area.getChildren().add(circle);
                     }
+                    if (subComponentType == SubComponentType.ANTIGEN)
+                    {
+                        Antigen antigen1 = new Antigen(Start, unitSize, Color.RED);
+                        subComponent.add(antigen1);
+                        Antigen antigen2 = new Antigen(new Location(Start.x + (End.x - Start.x) * 1 / 3, Start.y + (End.y - Start.y) * 1 / 3), unitSize, Color.RED);
+                        subComponent.add(antigen2);
+                        Antigen antigen3 = new Antigen(new Location(Start.x + (End.x - Start.x) * 2 / 3, Start.y + (End.y - Start.y) * 2 / 3), unitSize, Color.RED);
+                        subComponent.add(antigen3);
+                    }
                 }
                 break;
             default:
@@ -65,7 +78,6 @@ public class Capsit extends VirusComponent {
         }
         if (subComponent != null) {
             for (SubComponent sub : subComponent) {
-                this.subComponent.add(sub);
                 sub.draw(area);
             }
         }

@@ -1,7 +1,5 @@
 package n25;
 
-import java.util.List;
-
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -13,7 +11,7 @@ public class MatrixProtein extends VirusComponent {
         super(center, radius, unitSize, area, color);
     }
     
-    public void draw(Pane area, List<SubComponent> subComponents) {
+    public void draw(Pane area, int subComponentType) {
         this.area = area;
         for (Shape shape : shapes) {
             area.getChildren().remove(shape);
@@ -38,9 +36,18 @@ public class MatrixProtein extends VirusComponent {
             area.getChildren().add(circle);
         }
 
-        if (subComponents != null) {
-            for (SubComponent sub : subComponents) {
-                subComponent.add(sub);
+        if (subComponentType == SubComponentType.ANTIGEN)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                Location location = new Location(center.x + (int) (radius * Math.cos(Math.toRadians(i * 20))), center.y + (int) (radius * Math.sin(Math.toRadians(i * 20))));
+                Antigen antigen = new Antigen(location, unitSize, Color.RED);
+                subComponent.add(antigen);
+            }
+        }
+        
+        if (subComponent != null) {
+            for (SubComponent sub : subComponent) {
                 sub.draw(area);
             }
         }

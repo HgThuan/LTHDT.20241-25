@@ -13,7 +13,7 @@ public class Antigen extends SubComponent {
     }
 
     public void draw(Pane pane) {
-        Circle circle = new Circle(location.x, location.y, unitSize * 1.25);
+        Circle circle = new Circle(location.x, location.y, unitSize * 2);
         circle.setFill(color);
         pane.getChildren().add(circle);
         shapes.add(circle);
