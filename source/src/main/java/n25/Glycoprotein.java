@@ -17,14 +17,14 @@ public class Glycoprotein extends SubComponent {
     @Override
     public void draw(Pane pane){
         //draw rectangle
-        Rectangle rectangle = new Rectangle(location.x, location.y, unitSize * 2, unitSize * 0.5);
+        Rectangle rectangle = new Rectangle(location.x, location.y, unitSize * 4, unitSize * 0.5);
         rectangle.setFill(color);
         rectangle.setTranslateX(-rectangle.getWidth()/2);
         rectangle.setTranslateY(-rectangle.getHeight()/2);
         pane.getChildren().add(rectangle);
         shapes.add(rectangle);
         //draw circle
-        Circle circle = new Circle(location.x, location.y, unitSize * 1.25);
+        Circle circle = new Circle(location.x, location.y, unitSize * 2);
         circle.setFill(color);
         circle.setTranslateX(-rectangle.getWidth()/2);
         circle.setTranslateY(-rectangle.getHeight()/2);
