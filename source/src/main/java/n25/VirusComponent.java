@@ -17,16 +17,16 @@ public abstract class VirusComponent {
     protected Pane area;
     protected List<SubComponent> subComponent = new ArrayList<>();
     protected List<Shape> shapes = new ArrayList<>();
-    protected int stage = 0;
     protected Color color;
+    protected Color subColor;
 
-    public VirusComponent(Location center, int radius, int unitSize, Pane area, Color color)
-    {
+    public VirusComponent(Location center, int radius, int unitSize, Pane area, Color color, Color subColor) {
         this.center = center;
         this.radius = radius;
         this.unitSize = unitSize;
         this.area = area;
         this.color = color;
+        this.subColor = subColor;
     }
 
     public void relocate(Location location)
@@ -40,7 +40,7 @@ public abstract class VirusComponent {
         }
     }
 
-    public void relocate(vector2D vector)
+    public void relocate(Vector_2D vector)
     {
         center.move(vector);
         for (SubComponent sub : subComponent) {
@@ -63,10 +63,29 @@ public abstract class VirusComponent {
         shapes.clear();
     }
 
-    public void setComponentStage(int stage)
+    protected void draw(Pane area, int componentStyle, int subComponentType)
     {
-        this.stage = stage;
-    }
+        this.area = area;
+        for (Shape shape : shapes) {
+            area.getChildren().remove(shape);
+        }
+        shapes.clear();
+        for (SubComponent sub : this.subComponent) {
+            sub.dispose();
+        }
+        this.subComponent.clear();
 
-    public abstract void draw(Pane area, int subComponentType);
+        SubComponentType.createSubComponent(ComponentStyle.createComponent(componentStyle, shapes, center, radius, unitSize, color), center, subComponentType, this.subComponent, unitSize, subColor);
+        
+        if (shapes != null) {
+            for (Shape shape : shapes) {
+                area.getChildren().add(shape);
+            }
+        }
+        if (subComponent != null) {
+            for (SubComponent sub : subComponent) {
+                sub.draw(area);
+            }
+        }
+    }
 }

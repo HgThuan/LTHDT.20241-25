@@ -16,7 +16,7 @@ public abstract class SubComponent {
 
     public abstract void draw(Pane area);
     
-    public void relocate(vector2D vector) {
+    public void relocate(Vector_2D vector) {
         location.move(vector);
         for (Shape shape : shapes) {
             shape.relocate(shape.getLayoutX() + vector.x, shape.getLayoutY() + vector.y);

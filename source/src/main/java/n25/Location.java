@@ -29,13 +29,13 @@ public class Location {
     }
 
     // Di chuyển đối tượng theo vector
-    public void move(vector2D vector) {
+    public void move(Vector_2D vector) {
         this.x += vector.x;
         this.y += vector.y;
     }
 
     // Trừ 2 vị trí
-    public static vector2D subtract(Location start, Location end) {
-        return new vector2D(end.x - start.x, end.y - start.y);
+    public static Vector_2D subtract(Location start, Location end) {
+        return new Vector_2D(end.x - start.x, end.y - start.y);
     }
 }

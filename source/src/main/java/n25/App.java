@@ -25,10 +25,8 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        Capsit capsit = new Capsit(new Location(200, 200), 150, 5, pane, Color.BLUE);
-        capsit.setComponentStage(ComponentStage.HEXAGON_STAGE);
-        capsit.draw(pane, SubComponentType.ANTIGEN);
-
+        Capsit capsit = new Capsit(new Location(200, 200), 100, 5, pane, Color.YELLOW, Color.RED);
+        capsit.draw(pane, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN);
         //
         root.getChildren().add(pane);
         scene = new Scene(root, 640, 480);
