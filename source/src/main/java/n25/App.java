@@ -25,8 +25,12 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        Envelope envelope = new Envelope(new Location(200, 200), 100, 5, Color.RED, Color.BLUE);
+        Envelope envelope = new Envelope(new Location(200, 200), 150, 5, Color.YELLOW, Color.RED);
         envelope.draw(pane, SubComponentType.GLYCOPROTEIN);
+        MatrixProtein matrixProtein = new MatrixProtein(new Location(200, 200), 135, 5, Color.BROWN, Color.BLACK);
+        matrixProtein.draw(pane, SubComponentType.NONE);
+        Capsit capsit = new Capsit(new Location(200, 200), 100, 5, Color.GOLD, Color.BLUE);
+        capsit.draw(pane, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN);
         //
         root.getChildren().add(pane);
         scene = new Scene(root, 640, 480);

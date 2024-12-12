@@ -40,6 +40,7 @@ public class ComponentStyle {
                     for (int j = 0; j < circleCountForHexagon; j++) {
                         Location drawLocation = new Location(start.x + (end.x - start.x) * j / circleCountForHexagon, start.y + (end.y - start.y) * j / circleCountForHexagon);
                         Circle circle = new Circle(drawLocation.x, drawLocation.y, unitSize);
+                        circle.setFill(color);
                         shapes.add(circle);
                     }
                     Location l0 = new Location(start.x, start.y);
