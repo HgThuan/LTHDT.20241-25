@@ -5,8 +5,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 public class Nucleoid extends VirusComponent {
     
-    public Nucleoid(Location center, int radius, int unitSize, Pane area, Color color){
-        super(center, radius, unitSize, area, color, Color.BLACK);
+    public Nucleoid(Location center, int radius, int unitSize, Color color){
+        super(center, radius, unitSize, color, Color.BLACK);
     }
     
     public void draw(Pane area, int subComponentType){

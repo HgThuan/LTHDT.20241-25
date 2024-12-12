@@ -8,9 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public abstract class VirusComponent {
-    public static final int CIRCLE_STAGE = 0;
-    public static final int HEXAGON_STAGE = 1;
-
     protected Location center;
     protected int radius;
     protected int unitSize;
@@ -20,11 +17,10 @@ public abstract class VirusComponent {
     protected Color color;
     protected Color subColor;
 
-    public VirusComponent(Location center, int radius, int unitSize, Pane area, Color color, Color subColor) {
+    public VirusComponent(Location center, int radius, int unitSize, Color color, Color subColor) {
         this.center = center;
         this.radius = radius;
         this.unitSize = unitSize;
-        this.area = area;
         this.color = color;
         this.subColor = subColor;
     }
