@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
@@ -25,17 +24,11 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        Envelope envelope = new Envelope(new Location(200, 200), 150, 5, Color.YELLOW, Color.RED);
-        envelope.draw(pane, SubComponentType.GLYCOPROTEIN);
-        MatrixProtein matrixProtein = new MatrixProtein(new Location(200, 200), 135, 5, Color.BROWN, Color.BLACK);
-        matrixProtein.draw(pane, SubComponentType.NONE);
-        Capsit capsit = new Capsit(new Location(200, 200), 100, 5, Color.GOLD, Color.BLUE);
-        capsit.draw(pane, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN);
-        Nucleoid nucleoid = new Nucleoid(new Location(200, 200), 50, 5, Color.GREEN, Color.RED);
-        nucleoid.draw(pane, SubComponentType.NONE, 50);
+        HAV hav = new HAV("HAV", new Location(200, 400), 50, 3);
+        hav.displayInfection(pane, 100);
         //
         root.getChildren().add(pane);
-        scene = new Scene(root, 640, 480);
+        scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
         stage.show();
     }   
@@ -52,5 +45,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

@@ -15,6 +15,7 @@ public class Glycoprotein extends SubComponent {
     }
     @Override
     public void draw(Pane area){
+        this.area = area;
         // vẽ Line
         Location start = location;
         Location end = new Location(location.x + (int) (4 * unitSize * Math.cos(Math.toRadians(direction))),

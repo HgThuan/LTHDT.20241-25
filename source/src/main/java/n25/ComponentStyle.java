@@ -5,11 +5,13 @@ import java.util.List;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
 public class ComponentStyle {
     public static final int CIRCLE_STYLE = 0;
     public static final int HEXAGON_STYLE = 1;
+    public static final int SPIRAL_STYLE = 2;
 
     public static List<Location> createComponent(int componentStyle, List<Shape> shapes, Location center, double radius, int unitSize, Color color) {
         List<Location> result = new ArrayList<>();
@@ -57,6 +59,54 @@ public class ComponentStyle {
                     result.add(l5);
                 }
                 break;
+            case SPIRAL_STYLE:
+                // Lấy tọa độ trung tâm từ Location
+                double centerX = center.x;
+                double centerY = center.y - radius / 2;
+
+                double stepHeight = 2;
+                double amplitude = radius / 4.0; // Biên độ của xoắn ốc (độ rộng giữa hai đường xoắn)
+
+                for (int i = 0; i < radius / stepHeight; i++) {
+                    // Góc hiện tại (dùng để tính sin/cos cho vị trí xoắn ốc)
+                    angle = (int) (i * 720 / radius);
+
+                    // Tính tọa độ cho hai đường xoắn ốc
+                    double leftX = centerX - amplitude * Math.cos(Math.toRadians(angle));
+                    double leftY = centerY + i * stepHeight;
+
+                    double rightX = centerX + amplitude * Math.cos(Math.toRadians(angle));
+                    double rightY = centerY + i * stepHeight;
+
+                    // Vẽ các điểm trên hai đường xoắn ốc
+                    Circle leftCircle = new Circle(leftX, leftY, unitSize);
+                    leftCircle.setFill(color);
+                    shapes.add(leftCircle);
+
+                    Circle rightCircle = new Circle(rightX, rightY, unitSize);
+                    rightCircle.setFill(color);
+                    shapes.add(rightCircle);
+
+                    // Vẽ các điểm trên hai đường xoắn ốc
+                    Circle leftCircleTmp = new Circle(leftX, leftY, unitSize); 
+                    leftCircleTmp.setFill(color); 
+                    leftCircleTmp.setStroke(null); 
+                    leftCircleTmp.setStrokeWidth(1); 
+                    shapes.add(leftCircleTmp);
+
+                    Circle rightCircleTmp = new Circle(rightX, rightY, unitSize); 
+                    rightCircleTmp.setFill(color); 
+                    rightCircleTmp.setStroke(null); 
+                    rightCircleTmp.setStrokeWidth(1); 
+                    shapes.add(rightCircleTmp);
+                
+                    if (i % 2 == 0) { 
+                        Line basePair = new Line(leftX, leftY, rightX, rightY);
+                        basePair.setStroke(Color.RED);
+                        basePair.setStrokeWidth(1.5);
+                        shapes.add(basePair);
+                    }
+                }
             default:
                 break;
         }

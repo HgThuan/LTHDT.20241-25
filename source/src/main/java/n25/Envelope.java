@@ -4,12 +4,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class Envelope extends VirusComponent {
-    public Envelope(Location center, int radius, int unitSize, Color color, Color subColor) {
+    public Envelope(Location center, int radius, int unitSize, Color color, Color subColor, int subComponentType) {
         super(center, radius, unitSize, color, subColor);
+        this.subComponentType = subComponentType;
     }
 
-    public void draw(Pane area, int subComponentType)
+    public void draw(Pane area)
     {
-        draw(area, ComponentStyle.CIRCLE_STYLE, subComponentType);
+        super.draw(area);
     }
 }

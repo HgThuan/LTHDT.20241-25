@@ -34,6 +34,11 @@ public class Location {
         this.y += vector.y;
     }
 
+    // Tạo bản sao của vị trí
+    public Location clone() {
+        return new Location(this.x, this.y);
+    }
+    
     // Trừ 2 vị trí
     public static Vector_2D subtract(Location start, Location end) {
         return new Vector_2D(end.x - start.x, end.y - start.y);

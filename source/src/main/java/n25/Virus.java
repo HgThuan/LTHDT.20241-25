@@ -7,9 +7,12 @@ public abstract class Virus {
     protected String name;
     protected VirusStructure virusStructure;
     protected Location center;
-    public void displayStructure(Pane area, int componentStyle, int subComponentType, int numSteps){
-        virusStructure.draw(area, componentStyle, subComponentType, numSteps);
+    protected int radius;
+    protected int unitSize;
+    
+    public void displayStructure(Pane area){
+        virusStructure.draw(area);
     }
 
-    public abstract void displayInfection(Pane area, int componentStyle, int subComponentType, int numSteps, int timeSleep);
+    public abstract void displayInfection(Pane area, int timeSleep);
 }

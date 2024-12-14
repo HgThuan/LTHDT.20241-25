@@ -6,7 +6,7 @@ import java.util.List;
 import javafx.scene.layout.Pane;
 
 public class VirusStructure {
-    private List<VirusComponent> components = new ArrayList<>();
+    public List<VirusComponent> components = new ArrayList<>();
 
     public VirusStructure() {
     }
@@ -18,12 +18,14 @@ public class VirusStructure {
     public void relocate(Location location) {
         for (VirusComponent component : components) {
             component.relocate(location);
+            component.draw();
         }
     }
 
     public void relocate(Vector_2D vector) {
         for (VirusComponent component : components) {
             component.relocate(vector);
+            component.draw();
         }
     }
 
@@ -43,16 +45,19 @@ public class VirusStructure {
         this.components.removeAll(components);
     }
 
-    public void draw(Pane area, int componentStyle, int subComponentType, int numSteps) {
+    public void draw() {
+        try
+        {
+            for (VirusComponent component : components) {
+                component.draw();
+            }
+        }
+        finally{}
+    }
+
+    public void draw(Pane area) {
         for (VirusComponent component : components) {
-            if (component instanceof Nucleoid)
-            {
-                component.draw(area, subComponentType, numSteps);
-            }
-            else
-            {
-                component.draw(area, componentStyle, subComponentType);
-            }
+            component.draw(area);
         }
     }
 }

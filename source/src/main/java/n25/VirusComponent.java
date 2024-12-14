@@ -16,6 +16,8 @@ public abstract class VirusComponent {
     protected List<Shape> shapes = new ArrayList<>();
     protected Color color;
     protected Color subColor;
+    protected int componentStyle;
+    protected int subComponentType;
 
     public VirusComponent(Location center, int radius, int unitSize, Color color, Color subColor) {
         this.center = center;
@@ -25,26 +27,19 @@ public abstract class VirusComponent {
         this.subColor = subColor;
     }
 
+    public void setArea(Pane area)
+    {
+        this.area = area;
+    }
+    
     public void relocate(Location location)
     {
         center.move(location);
-        for (SubComponent sub : subComponent) {
-            sub.relocate(Location.subtract(center, sub.location));
-        }
-        for (Shape shape : shapes) {
-            shape.relocate(shape.getLayoutX() + location.x, shape.getLayoutY() + location.y);
-        }
     }
 
     public void relocate(Vector_2D vector)
     {
         center.move(vector);
-        for (SubComponent sub : subComponent) {
-            sub.relocate(vector);
-        }
-        for (Shape shape : shapes) {
-            shape.relocate(shape.getLayoutX() + vector.x, shape.getLayoutY() + vector.y);
-        }
     }
 
     public void dispose()
@@ -59,29 +54,38 @@ public abstract class VirusComponent {
         shapes.clear();
     }
 
-    protected void draw(Pane area, int componentStyle, int subComponentType)
+    protected void draw()
+    {
+        try
+        {
+            for (Shape shape : shapes) {
+                area.getChildren().remove(shape);
+            }
+            shapes.clear();
+            for (SubComponent sub : this.subComponent) {
+                sub.dispose();
+            }
+            this.subComponent.clear();
+
+            SubComponentType.createSubComponent(ComponentStyle.createComponent(componentStyle, shapes, center, radius, unitSize, color), center, subComponentType, this.subComponent, unitSize, subColor);
+            
+            if (shapes != null) {
+                for (Shape shape : shapes) {
+                    area.getChildren().add(shape);
+                }
+            }
+            if (subComponent != null) {
+                for (SubComponent sub : subComponent) {
+                    sub.draw(area);
+                }
+            }
+        }
+        finally{}
+    }
+
+    protected void draw(Pane area)
     {
         this.area = area;
-        for (Shape shape : shapes) {
-            area.getChildren().remove(shape);
-        }
-        shapes.clear();
-        for (SubComponent sub : this.subComponent) {
-            sub.dispose();
-        }
-        this.subComponent.clear();
-
-        SubComponentType.createSubComponent(ComponentStyle.createComponent(componentStyle, shapes, center, radius, unitSize, color), center, subComponentType, this.subComponent, unitSize, subColor);
-        
-        if (shapes != null) {
-            for (Shape shape : shapes) {
-                area.getChildren().add(shape);
-            }
-        }
-        if (subComponent != null) {
-            for (SubComponent sub : subComponent) {
-                sub.draw(area);
-            }
-        }
+        draw(); 
     }
 }

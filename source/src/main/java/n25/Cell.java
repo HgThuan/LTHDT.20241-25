@@ -14,6 +14,7 @@ public class Cell {
     private Color color;                                // Màu sắc của tế bào
     private Color subColor;                             // Màu sắc của tế bào khi bị nhiễm
     private List<Shape> shapes = new ArrayList<>();     // Danh sách các Shape để vẽ tế bào
+    private Pane area;                                  // Pane chứa tế bào
 
     public Cell(Location location, int radius, int unitSize, Color color, Color subColor) {
         this.location = location;
@@ -23,7 +24,14 @@ public class Cell {
         this.subColor = subColor;
     }
 
+    public void dispose() {
+        for (Shape shape : shapes) {
+            area.getChildren().remove(shape);
+        }
+    }
+
     public void draw(Pane area) {
+        this.area = area;
         for (Shape shape : shapes) {
             area.getChildren().remove(shape);
         }
