@@ -7,8 +7,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 public class Nucleoid extends VirusComponent {
     
-    public Nucleoid(Location center, int radius, int unitSize, Color color){
-        super(center, radius, unitSize, color, Color.BLACK);
+    public Nucleoid(Location center, int radius, int unitSize, Color color, Color subColor){
+        super(center, radius, unitSize, color, subColor);
     }
 
     public void draw(Pane area, int subComponentType, int numSteps){
@@ -66,7 +66,7 @@ public class Nucleoid extends VirusComponent {
         
         if (i % 2 == 0) { 
         Line basePair = new Line(leftX, leftY, rightX, rightY);
-        basePair.setStroke(Color.RED);
+        basePair.setStroke(subColor);
         basePair.setStrokeWidth(1.5);
         shapes.add(basePair);
         area.getChildren().add(basePair);

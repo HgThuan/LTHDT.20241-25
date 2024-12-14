@@ -31,6 +31,8 @@ public class App extends Application {
         matrixProtein.draw(pane, SubComponentType.NONE);
         Capsit capsit = new Capsit(new Location(200, 200), 100, 5, Color.GOLD, Color.BLUE);
         capsit.draw(pane, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN);
+        Nucleoid nucleoid = new Nucleoid(new Location(200, 200), 50, 5, Color.GREEN, Color.RED);
+        nucleoid.draw(pane, SubComponentType.NONE, 10);
         //
         root.getChildren().add(pane);
         scene = new Scene(root, 640, 480);
