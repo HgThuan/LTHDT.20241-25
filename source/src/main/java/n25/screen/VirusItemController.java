@@ -1,4 +1,4 @@
-package controller;
+package n25.screen;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

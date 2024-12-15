@@ -1,4 +1,4 @@
-package screen;
+package n25.screen;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -114,7 +114,7 @@ public class MainScreenController {
     @FXML
     public void btnHelpClicked(ActionEvent e) {
         try {
-            final String HELP_SCREEN_FXML = "HelpScreen.fxml";
+            final String HELP_SCREEN_FXML = "Help.fxml";
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HELP_SCREEN_FXML));
             HelpScreenController helpScreenController = new HelpScreenController();
             fxmlLoader.setController(helpScreenController);

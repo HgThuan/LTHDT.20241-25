@@ -1,4 +1,4 @@
-package screen;
+package n25.screen;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;

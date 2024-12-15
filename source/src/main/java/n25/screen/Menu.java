@@ -1,4 +1,4 @@
-package screen;
+package n25.screen;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
