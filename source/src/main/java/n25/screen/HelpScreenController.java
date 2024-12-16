@@ -12,10 +12,10 @@ public class HelpScreenController {
     public void setAbout() {
         try {
             String HELP_PATH = "/screen/Help.txt";
-
+    
             String currentPath = System.getProperty("user.dir");
             HELP_PATH = currentPath + "/src/" + HELP_PATH;
-
+    
             String content = new String(Files.readAllBytes(Paths.get(HELP_PATH)));
             taAbout.setText(content);
         } catch (IOException ioe) {
