@@ -18,7 +18,7 @@ public class Rhinovirus extends Virus{
         this.unitSize = unitSize;
 
         List<VirusComponent> components = List.of(
-            new Enzyme(center.clone(), radius, unitSize, Color.ANTIQUEWHITE, Color.BEIGE),
+            new MatrixProtein(center.clone(), radius + radius/2, unitSize, Color.RED, Color.BLUE, SubComponentType.ANTIGEN),
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
             new Capsit(center.clone(), radius, unitSize, Color.BLUE, Color.ALICEBLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN)
         );
@@ -29,8 +29,6 @@ public class Rhinovirus extends Virus{
     private List<Rhinovirus> rhinoviruses = new ArrayList<>();
     private List<Vector_2D> speeds = new ArrayList<>();
     private List<Nucleoid> nucleoids = new ArrayList<>();
-    private List<Capsit> capsits = new ArrayList<>();
-    private List<Enzyme> enzymes = new ArrayList<>();
     @Override
     public void displayInfection(Pane area, int timeSleep){
         virusStructure.draw(area);
@@ -57,10 +55,10 @@ public class Rhinovirus extends Virus{
             nucleus.draw(area);
             nucleoids.add(nucleus);
             angle += 45;
-            Location capsLocation = new Location(cellLocation.x + (int) (2 * radius *  Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
-            Capsit caps = new Capsit(capsLocation, radius / 2, unitSize, Color.AQUA, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN);
-            caps.draw(area);
-            capsits.add(caps);
+            // Location capsLocation = new Location(cellLocation.x + (int) (2 * radius *  Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
+            // Capsit caps = new Capsit(capsLocation, radius / 2, unitSize, Color.AQUA, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN);
+            // caps.draw(area);
+            // capsits.add(caps);
         }));
         attack.setCycleCount(8);
 
@@ -89,6 +87,7 @@ public class Rhinovirus extends Virus{
         angle = 216;
         getIn.setOnFinished(e -> 
         {
+            virusStructure.components.get(0).dispose();
             virusStructure.components.get(1).dispose();
             virusStructure.components.get(2).dispose();
             attack.play();
@@ -100,9 +99,6 @@ public class Rhinovirus extends Virus{
             cell.dispose();
             nucleoids.forEach(nucleoid -> nucleoid.dispose());
             nucleoids.clear();
-            capsits.forEach(capsit -> capsit.dispose());
-            capsits.clear();
-            enzymes.clear();
             rhinoviruses.clear();
             rhinoviruses.add(this);
             for (int i = 1; i < 8; i++)
