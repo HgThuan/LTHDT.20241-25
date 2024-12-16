@@ -13,7 +13,6 @@ public class Rhinovirus extends Virus{
     private final int TIME = 5000;
     public Rhinovirus(String name, Location center, int radius, int unitSize){
         this.name = name;
-        this.center = center;
         this.radius = radius;
         this.unitSize = unitSize;
 
@@ -22,7 +21,7 @@ public class Rhinovirus extends Virus{
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
             new Capsit(center.clone(), radius, unitSize, Color.BLUE, Color.ALICEBLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN)
         );
-        VirusStructure virusStructure = new VirusStructure(components);
+        VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
     }
     private int angle;
@@ -32,7 +31,7 @@ public class Rhinovirus extends Virus{
     @Override
     public void displayInfection(Pane area, int timeSleep){
         virusStructure.draw(area);
-        Location cellLocation = new Location(center.x + radius * 8, center.y);
+        Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
         Cell cell = new Cell(cellLocation, radius * 4, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 

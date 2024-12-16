@@ -39,6 +39,11 @@ public class Location {
         return new Location(this.x, this.y);
     }
     
+    // Cộng vị trí với vector 
+    public Location add(Vector_2D vector) {
+        return new Location(this.x + vector.x, this.y + vector.y);
+    }
+
     // Trừ 2 vị trí
     public static Vector_2D subtract(Location start, Location end) {
         return new Vector_2D(end.x - start.x, end.y - start.y);

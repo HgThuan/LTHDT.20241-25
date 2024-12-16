@@ -24,7 +24,7 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        HAV hav = new HAV("HAV", new Location(200, 400), 50, 3);
+        HAV hav = new HAV("HAV", new Location(200, 400), 50, 2);
         hav.displayInfection(pane, 100);
         //
         root.getChildren().add(pane);

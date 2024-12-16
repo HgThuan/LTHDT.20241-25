@@ -7,15 +7,21 @@ import javafx.scene.layout.Pane;
 
 public class VirusStructure {
     public List<VirusComponent> components = new ArrayList<>();
+    private Location center;
+    public Location getCenter() {
+        return center;
+    }
 
     public VirusStructure() {
     }
 
-    public VirusStructure(List<VirusComponent> components) {
+    public VirusStructure(List<VirusComponent> components, Location center) {
         this.components = components;
+        this.center = center;
     }
 
     public void relocate(Location location) {
+        center = location;
         for (VirusComponent component : components) {
             component.relocate(location);
             component.draw();
@@ -23,6 +29,7 @@ public class VirusStructure {
     }
 
     public void relocate(Vector_2D vector) {
+        center.move(vector);
         for (VirusComponent component : components) {
             component.relocate(vector);
             component.draw();

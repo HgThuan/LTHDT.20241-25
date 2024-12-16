@@ -14,7 +14,6 @@ public class HIV extends Virus {
     public HIV(String name, Location center, int radius, int unitSize)
     {
         this.name = name;
-        this.center = center;
         this.radius = radius;
         this.unitSize = unitSize;
 
@@ -24,7 +23,7 @@ public class HIV extends Virus {
             new MatrixProtein(center.clone(), radius + radius / 2, unitSize, Color.RED, Color.BLUE,  SubComponentType.NONE),
             new Envelope(center.clone(), radius + radius, unitSize, Color.YELLOW, Color.RED, SubComponentType.GLYCOPROTEIN)
         );
-        VirusStructure virusStructure = new VirusStructure(components);
+        VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
     }
 
@@ -35,7 +34,7 @@ public class HIV extends Virus {
     @Override
     public void displayInfection(Pane area, int timeSleep) {
         virusStructure.draw(area);
-        Location cellLocation = new Location(center.x + radius * 8, center.y);
+        Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
         Cell cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 

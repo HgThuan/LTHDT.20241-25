@@ -6,7 +6,6 @@ public abstract class Virus {
     
     protected String name;
     protected VirusStructure virusStructure;
-    protected Location center;
     protected int radius;
     protected int unitSize;
     

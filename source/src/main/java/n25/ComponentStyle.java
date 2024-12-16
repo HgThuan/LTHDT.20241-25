@@ -26,7 +26,7 @@ public class ComponentStyle {
                     circle.setFill(color);
                     shapes.add(circle);
                 }
-                for (int i = 0; i < 40; i++)
+                for (int i = 0; i < 30; i++)
                 {
                     Location location = new Location(center.x + (int) (radius * Math.cos(Math.toRadians(i * 20))), center.y + (int) (radius * Math.sin(Math.toRadians(i * 20))));
                     result.add(location);
