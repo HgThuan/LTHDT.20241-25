@@ -28,7 +28,7 @@ public class HIV extends Virus {
         List<VirusComponent> components = List.of(
             new MatrixProtein(center.clone(), (int) (1.35 * radius), unitSize, Color.RED, Color.BLUE, 0),
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
-            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGENORENZYME),
+            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN),
             new Envelope(center.clone(), (int) (1.5 * radius), unitSize, Color.YELLOW, Color.RED, SubComponentType.GLYCOPROTEIN),
             new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.BROWN),
             new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.BROWN)
