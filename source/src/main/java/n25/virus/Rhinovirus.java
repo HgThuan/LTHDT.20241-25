@@ -219,6 +219,6 @@ public class Rhinovirus extends Virus{
         super.dispose();
         nucleoids.forEach(nucleoid -> nucleoid.dispose());
         enzymes.forEach(enzyme -> enzyme.dispose());
-        rhinoviruses.forEach(hav -> hav.dispose());
+        rhinoviruses.forEach(rhinovirus -> rhinovirus.dispose());
     }
 }
