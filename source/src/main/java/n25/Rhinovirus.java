@@ -14,6 +14,7 @@ import javafx.util.Duration;
 public class Rhinovirus extends Virus{
     private final int TIME = 5000;
     public Rhinovirus(String name, Location center, int radius, int unitSize){
+        this.isEnvelopedVirus = false;
         this.name = name;
         this.radius = radius;
         this.unitSize = unitSize;
@@ -24,10 +25,10 @@ public class Rhinovirus extends Virus{
         enzymeLocations.get(0).move(new Vector_2D(-radius / 3, 0));
         enzymeLocations.get(1).move(new Vector_2D(radius / 3, 0));
         List<VirusComponent> components = List.of(
-            new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN), 
-            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN),
-            new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.BLACK),
-            new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.BLACK)
+            new Nucleoid(center.clone(), radius / 2, unitSize, Color.RED), 
+            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGENORENZYME),
+            new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.GREEN),
+            new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.GREEN)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
@@ -66,19 +67,19 @@ public class Rhinovirus extends Virus{
         Timeline synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> {
             Location nucleusLocation = new Location(cellLocation.x + (int) ((3) * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) ((3) * radius * Math.sin(Math.toRadians(angle))));
             baseLocations.add(nucleusLocation);
-            Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.GREEN);
+            Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.RED);
             nucleus.draw(area);
             nucleoids.add(nucleus);
 
             Location enzymeLocation1 = nucleusLocation.clone();
             enzymeLocation1.move(new Vector_2D(-radius / 3, 0));
-            Enzyme enzyme1 = new Enzyme(enzymeLocation1, radius / 3, unitSize, Color.BLACK);
+            Enzyme enzyme1 = new Enzyme(enzymeLocation1, radius / 3, unitSize, Color.GREEN);
             enzyme1.draw(area);
             enzymes.add(enzyme1);
             
             Location enzumeLocation2 = nucleusLocation.clone();
             enzumeLocation2.move(new Vector_2D(radius / 3, 0));
-            Enzyme enzyme2 = new Enzyme(enzumeLocation2, radius / 3, unitSize, Color.BLACK);
+            Enzyme enzyme2 = new Enzyme(enzumeLocation2, radius / 3, unitSize, Color.GREEN);
             enzymes.add(enzyme2);
             enzyme2.draw(area);
             angle += 90;
