@@ -8,30 +8,23 @@ import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import n25.Cell;
 import n25.Location;
 import n25.Vector_2D;
-import n25.VirusStructure;
 import n25.subcomponent.Glycoprotein;
 import n25.subcomponent.Spike;
 import n25.subcomponent.SubComponentType;
-import n25.viruscomponent.Capsit;
-import n25.viruscomponent.ComponentStyle;
 import n25.viruscomponent.Envelope;
 import n25.viruscomponent.Enzyme;
 import n25.viruscomponent.Nucleoid;
 import n25.viruscomponent.VirusComponent;
 
 public class SarCoV2 extends Virus {
-    public final int TIME = 5000;
-    public SarCoV2(String name, Location center, int radius, int unitSize) {
+    public SarCoV2(Location center, int radius, int unitSize) {
+        super(center, radius, unitSize);
         this.isEnvelopedVirus = true;
-        this.name = name;
-        this.radius = radius;
-        this.unitSize = unitSize;
-
+        
         List<Location> enzymeLocations = new ArrayList<>();
         enzymeLocations.add(center.clone());
         enzymeLocations.add(center.clone());
@@ -39,32 +32,18 @@ public class SarCoV2 extends Virus {
         enzymeLocations.get(1).move(new Vector_2D(radius / 3, 0));
         List<VirusComponent> components = List.of(
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.RED),
-            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN),
             new Envelope(center.clone(), (int) (radius * 1.5), unitSize, Color.GREEN, Color.RED, SubComponentType.GLYCOPROTEINANDSPIKE),
             new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.GREEN),
             new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.GREEN)
         );
-        VirusStructure virusStructure = new VirusStructure(components, center);
-        this.virusStructure = virusStructure;
+        this.virusStructure.addComponents(components);  
     }
-    
-    private int angle;
-    private List<SarCoV2> sarCoV2s = new ArrayList<>();
-    private List<Vector_2D> speeds = new ArrayList<>();
-    private List<Nucleoid> nucleoids = new ArrayList<>();
-    private List<Enzyme> enzymes = new ArrayList<>();
 
-    // Các biến dùng để vẽ các thành phần của virus
-    private List<Shape> shapes = new ArrayList<>();
-    private int count;
-    private Location startLocation, endLocation;
-    private Vector_2D drawVector;
-    private List<Location> baseLocations = new ArrayList<>();
-
+    @Override
     public void displayInfection(Pane area, int timeSleep){
         virusStructure.draw(area);
         Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
-        Cell cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
+        cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 
         // Giai đoạn 1:
@@ -101,58 +80,7 @@ public class SarCoV2 extends Virus {
         })));
         periods.get(1).setCycleCount(3);
 
-        // Giai đoạn 3: 
-        // Virus hoàn thiện các thành phần khác
-        // Tạo vỏ capsit
-        int circleCountForHexagon = (int) (radius / (2 * unitSize));
-        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
-        {
-            if (count == circleCountForHexagon)
-            {
-                count = 0;
-                angle += 60;
-                startLocation = endLocation.clone();
-                endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            }
-            drawVector = new Vector_2D(startLocation.x + (endLocation.x - startLocation.x) * count / circleCountForHexagon, startLocation.y + (endLocation.y - startLocation.y) * count / circleCountForHexagon);
-            for (Location baseLocation : baseLocations)
-            {
-                Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, unitSize);
-                circle.setFill(Color.GOLD);
-                shapes.add(circle);
-                area.getChildren().add(circle);
-            }
-            count++;
-        })));
-        periods.get(2).setCycleCount(6 * circleCountForHexagon);
-
-        // Giai đoạn 4:
-        // Tạo các thành phần phụ của virus
-        // Tạo antigen
-        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
-        {
-            if (count == 3)
-            {
-                count = 0;
-                angle += 60;
-                startLocation = endLocation.clone();
-                endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            }
-            drawVector = new Vector_2D(startLocation.x + (endLocation.x - startLocation.x) * count / 3, startLocation.y + (endLocation.y - startLocation.y) * count / 3);
-            for (Location baseLocation : baseLocations)
-            {
-                Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, 2 * unitSize);
-                circle.setFill(Color.BLUE);  
-                shapes.add(circle);
-                area.getChildren().add(circle);
-            }
-            count++;
-        })));
-        periods.get(3).setCycleCount(18);
-
-        // Giai đoạn 5:
+        // Giai đoạn 3:
         // Tạo Envelope
         int circleCountForEnvelope = (int) (1.5 * Math.PI * radius / unitSize);
         periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep/2), e -> {
@@ -177,9 +105,9 @@ public class SarCoV2 extends Virus {
             // Tăng bộ đếm để vẽ điểm tiếp theo
             count++;
         })));
-        periods.get(4).setCycleCount(circleCountForEnvelope);
+        periods.get(2).setCycleCount(circleCountForEnvelope);
 
-        // Giai đoạn 6:
+        // Giai đoạn 4:
         // Tạo các thành phần phụ của virus
         // Tạo glycoprotein và spike
         periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> {
@@ -217,9 +145,9 @@ public class SarCoV2 extends Virus {
             }
             count++;
         })));
-        periods.get(5).setCycleCount(30);
+        periods.get(3).setCycleCount(30);
         
-        // Giai đoạn 7:
+        // Giai đoạn 5:
         // Virus thoát khỏi tế bào
         // Khởi tạo speeds
         for (int i = 0; i < 4; i++)
@@ -231,67 +159,50 @@ public class SarCoV2 extends Virus {
             
             for (int i = 0; i < 4; i++)
             {
-                sarCoV2s.get(i).virusStructure.relocate(speeds.get(i));
+                viruses.get(i).virusStructure.relocate(speeds.get(i));
             }
         })));
-        periods.get(6).setCycleCount(TIME / timeSleep);
+        periods.get(4).setCycleCount(TIME / timeSleep);
 
         //--------------------------------------------------------------------------------
         // Thực thi các giai đoạn
         // Giai đoạn 1:
         periods.get(0).play();
+        status = "Virus is penetrating into the cell";
 
         // Giai đoạn 2:
         angle = 270;
         periods.get(0).setOnFinished(e -> 
         {
-            virusStructure.components.get(1).dispose(); 
-            virusStructure.components.get(2).dispose();
+            virusStructure.components.get(1).dispose();
             baseLocations.clear();
             baseLocations.add(virusStructure.getCenter());
             periods.get(1).play();
+            status = "Virus is synthesizing nucleoid";
         });
 
-        // Giai đoạn 3:
-        periods.get(1).setOnFinished( e -> 
-        {
+        // Giai đoạn 3: 
+        periods.get(1).setOnFinished(e ->{ 
             count = 0;
-            angle = -30;
+            angle = 0;
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(2).play();
+            status = "Viruses are creating lipit envelope";
         });
-        
+
         // Giai đoạn 4:
-        periods.get(2).setOnFinished(e -> 
-        {
+        periods.get(2).setOnFinished(e ->{ 
             count = 0;
-            angle = -30;
+            angle = 0;
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(3).play();
+            status = "Viruses are creating glycoprotein and spike";
         });
 
-        // Giai đoạn 5: 
-        periods.get(3).setOnFinished(e ->{ 
-            count = 0;
-            angle = 0;
-            startLocation = new Location(0, -radius);
-            endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            periods.get(4).play();
-        });
-
-        // Giai đoạn 6:
-        periods.get(4).setOnFinished(e ->{ 
-            count = 0;
-            angle = 0;
-            startLocation = new Location(0, -radius);
-            endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            periods.get(5).play();
-        });
-
-        // Giai đoạn 7:
-        periods.get(5).setOnFinished(e -> 
+        // Giai đoạn 5:
+        periods.get(3).setOnFinished(e -> 
         {
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
@@ -302,22 +213,21 @@ public class SarCoV2 extends Virus {
             enzymes.clear();
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
-            sarCoV2s.clear();
-            sarCoV2s.add(this);
+            viruses.clear();
+            viruses.add(this);
             for (int i = 1; i < 4; i++)
             {
-                SarCoV2 sarCoV2 = new SarCoV2("SarCoV2", baseLocations.get(i), radius, unitSize);
+                SarCoV2 sarCoV2 = new SarCoV2(baseLocations.get(i), radius, unitSize);
                 sarCoV2.displayStructure(area);
-                sarCoV2s.add(sarCoV2);
+                viruses.add(sarCoV2);
             }
-            periods.get(6).play();
+            periods.get(4).play();
+            status = "Virus is escaping from the cell";
         });
-    }
-    public void dispose()
-    {
-        super.dispose();
-        nucleoids.forEach(nucleoid -> nucleoid.dispose());
-        enzymes.forEach(enzyme -> enzyme.dispose());
-        sarCoV2s.forEach(sarCoV2 -> sarCoV2.dispose());
+
+        periods.get(4).setOnFinished(e -> 
+        {
+            status = "Completed";
+        });
     }
 }

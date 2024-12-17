@@ -13,7 +13,6 @@ import javafx.util.Duration;
 import n25.Cell;
 import n25.Location;
 import n25.Vector_2D;
-import n25.VirusStructure;
 import n25.subcomponent.Glycoprotein;
 import n25.subcomponent.SubComponentType;
 import n25.viruscomponent.Capsit;
@@ -25,13 +24,10 @@ import n25.viruscomponent.Nucleoid;
 import n25.viruscomponent.VirusComponent;
 
 public class HIV extends Virus {
-    private final int TIME = 5000;
     public HIV(String name, Location center, int radius, int unitSize)
     {
+        super(center, radius, unitSize);
         this.isEnvelopedVirus = true;
-        this.name = name;
-        this.radius = radius;
-        this.unitSize = unitSize;
         List<Location> enzymeLocations = new ArrayList<>();
         enzymeLocations.add(center.clone());
         enzymeLocations.add(center.clone());
@@ -46,28 +42,14 @@ public class HIV extends Virus {
             new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.GREEN),
             new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.GREEN)
         );
-        VirusStructure virusStructure = new VirusStructure(components, center);
-        this.virusStructure = virusStructure;
+        this.virusStructure.addComponents(components);  
     }
 
-    private int angle;
-    private List<HIV> hivs = new ArrayList<>();
-    private List<Vector_2D> speeds = new ArrayList<>();
-    private List<Nucleoid> nucleoids = new ArrayList<>();
-    private List<Enzyme> enzymes = new ArrayList<>();
-
-    // Các biến dùng để vẽ các thành phần của virus
-    List<Shape> shapes = new ArrayList<>();
-    int circleCountForHexagon;
-    int count;
-    Location startLocation, endLocation;
-    Vector_2D drawVector;
-    List<Location> baseLocations = new ArrayList<>();
     @Override
     public void displayInfection(Pane area, int timeSleep) {
         virusStructure.draw(area);
         Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
-        Cell cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
+        cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 
         // Giai đoạn 1:
@@ -146,7 +128,7 @@ public class HIV extends Virus {
             for (Location baseLocation : baseLocations)
             {
                 Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, 2 * unitSize);
+                Circle circle = new Circle(newLocation.x, newLocation.y, 1.5 * unitSize);
                 circle.setFill(Color.BLUE);  
                 shapes.add(circle);
                 area.getChildren().add(circle);
@@ -248,7 +230,7 @@ public class HIV extends Virus {
             {
             for (int i = 0; i < 4; i++)
             {
-                hivs.get(i).virusStructure.relocate(speeds.get(i));
+                viruses.get(i).virusStructure.relocate(speeds.get(i));
             }
         }})));
         periods.get(7).setCycleCount(TIME / timeSleep);
@@ -257,6 +239,7 @@ public class HIV extends Virus {
         // Thực thi các giai đoạn
         // Giai đoạn 1:
         periods.get(0).play();
+        status = "Virus is penetrating into the cell";
 
         // Giai đoạn 2:
         angle = 270;
@@ -268,6 +251,7 @@ public class HIV extends Virus {
             baseLocations.clear();
             baseLocations.add(virusStructure.getCenter());
             periods.get(1).play();
+            status = "Virus is synthesizing nucleoid and enzymes";
         });
 
         // Giai đoạn 3:
@@ -278,6 +262,7 @@ public class HIV extends Virus {
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(2).play();
+            status = "Virus is creating capsit";
         });
         
         // Giai đoạn 4:
@@ -288,6 +273,7 @@ public class HIV extends Virus {
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(3).play();
+            status = "Virus is creating protein capsit";
         });
 
         // Giai đoạn 5: 
@@ -298,6 +284,7 @@ public class HIV extends Virus {
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(4).play();
+            status = "Virus is creating matrix protein p17";
         });
         periods.get(4).setOnFinished(e -> 
         {
@@ -306,6 +293,7 @@ public class HIV extends Virus {
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(5).play();
+            status = "Virus is creating lipit envelope";
         });
         periods.get(5).setOnFinished(e -> 
         {
@@ -314,6 +302,7 @@ public class HIV extends Virus {
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(6).play();
+            status = "Virus is creating glycoprotein";
         });
         periods.get(6).setOnFinished(e -> 
         {
@@ -326,22 +315,21 @@ public class HIV extends Virus {
             enzymes.clear();
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
-            hivs.clear();
-            hivs.add(this);
+            viruses.clear();
+            viruses.add(this);
             for (int i = 1; i < 4; i++)
             {
                 HIV hiv = new HIV("HIV", baseLocations.get(i), radius, unitSize);
                 hiv.displayStructure(area);
-                hivs.add(hiv);
+                viruses.add(hiv);
             }
             periods.get(7).play();
+            status = "Virus is escaping from the cell";
         });
-    }
-    public void dispose()
-    {
-        super.dispose();
-        nucleoids.forEach(nucleoid -> nucleoid.dispose());
-        enzymes.forEach(enzyme -> enzyme.dispose());
-        hivs.forEach(hiv -> hiv.dispose());
+
+        periods.get(7).setOnFinished(e -> 
+        {
+            status = "Completed";
+        });
     }
 }

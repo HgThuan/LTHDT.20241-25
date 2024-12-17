@@ -1,6 +1,5 @@
 package n25.virus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.KeyFrame;
@@ -8,12 +7,10 @@ import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import n25.Cell;
 import n25.Location;
 import n25.Vector_2D;
-import n25.VirusStructure;
 import n25.subcomponent.SubComponentType;
 import n25.viruscomponent.Capsit;
 import n25.viruscomponent.ComponentStyle;
@@ -21,11 +18,10 @@ import n25.viruscomponent.Nucleoid;
 import n25.viruscomponent.VirusComponent;
 
 public class HAV extends Virus {
-    private final int TIME = 5000;
-    public HAV(String name, Location center, int radius, int unitSize)
+    public HAV(Location center, int radius, int unitSize)
     {
+        super(center, radius, unitSize);    
         this.isEnvelopedVirus = false;
-        this.name = name;
         this.radius = radius;
         this.unitSize = unitSize;
 
@@ -33,25 +29,8 @@ public class HAV extends Virus {
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.RED),
             new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN)
         );
-        VirusStructure virusStructure = new VirusStructure(components, center);
-        this.virusStructure = virusStructure;
+        this.virusStructure.addComponents(components);
     }
-
-    private int angle;
-    private List<HAV> havs = new ArrayList<>();
-    private List<Vector_2D> speeds = new ArrayList<>();
-    private List<Nucleoid> nucleoids = new ArrayList<>();
-
-    // Các biến dùng để vẽ các thành phần của virus
-    List<Shape> shapes = new ArrayList<>();
-    int circleCountForHexagon;
-    int count;
-    Location startLocation, endLocation;
-    Vector_2D drawVector;
-    List<Location> baseLocations = new ArrayList<>();
-
-    // Biến dùng để vẽ tế bào
-    private Cell cell;
 
     @Override
     public void displayInfection(Pane area, int timeSleep) {
@@ -125,7 +104,7 @@ public class HAV extends Virus {
             for (Location baseLocation : baseLocations)
             {
                 Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, 2 * unitSize);
+                Circle circle = new Circle(newLocation.x, newLocation.y, 1.5 * unitSize);
                 circle.setFill(Color.BLUE);  
                 shapes.add(circle);
                 area.getChildren().add(circle);
@@ -146,7 +125,7 @@ public class HAV extends Virus {
         {
             for (int i = 0; i < 4; i++)
             {
-                havs.get(i).virusStructure.relocate(speeds.get(i));
+                viruses.get(i).virusStructure.relocate(speeds.get(i));
             }
         })));
         periods.get(4).setCycleCount(TIME / timeSleep);
@@ -154,12 +133,14 @@ public class HAV extends Virus {
         //--------------------------------------------------------------------------------
         // Thực thi các giai đoạn
         // Giai đoạn 1:
+        status = "Virus is penetrating into the cell";
         periods.get(0).play();
 
         // Giai đoạn 2:
         angle = 270;
         periods.get(0).setOnFinished(e -> 
         {
+            status = "Virus is synthesizing nucleoid";
             virusStructure.components.get(1).dispose();
             baseLocations.clear();
             baseLocations.add(virusStructure.getCenter());
@@ -169,6 +150,7 @@ public class HAV extends Virus {
         // Giai đoạn 3:
         periods.get(1).setOnFinished( e -> 
         {
+            status = "Viruses are creating capsit";
             count = 0;
             angle = -30;
             startLocation = new Location(0, -radius);
@@ -179,6 +161,7 @@ public class HAV extends Virus {
         // Giai đoạn 4:
         periods.get(2).setOnFinished(e -> 
         {
+            status = "Viruses are creating VP1 and VP3";
             count = 0;
             angle = -30;
             startLocation = new Location(0, -radius);
@@ -189,28 +172,26 @@ public class HAV extends Virus {
         // Giai đoạn 5: 
         periods.get(3).setOnFinished(e -> 
         {
+            status = "Virus is escaping from the cell";
             cell.dispose();
             nucleoids.forEach(nucleoid -> nucleoid.dispose());
             nucleoids.clear();
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
-            havs.clear();
-            havs.add(this);
+            viruses.clear();
+            viruses.add(this);
             for (int i = 1; i < 4; i++)
             {
-                HAV hav = new HAV("HAV", baseLocations.get(i), radius, unitSize);
+                HAV hav = new HAV(baseLocations.get(i), radius, unitSize);
                 hav.displayStructure(area);
-                havs.add(hav);
+                viruses.add(hav);
             }
             periods.get(4).play();
         });
-    }
 
-    public void dispose()
-    {
-        super.dispose();
-        cell.dispose(); 
-        nucleoids.forEach(nucleoid -> nucleoid.dispose());
-        havs.forEach(hav -> hav.dispose());
+        periods.get(4).setOnFinished(e -> 
+        {
+            status = "Completed";
+        });
     }
 }

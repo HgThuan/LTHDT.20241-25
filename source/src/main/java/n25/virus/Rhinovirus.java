@@ -8,7 +8,6 @@ import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import n25.Cell;
 import n25.Location;
@@ -22,12 +21,10 @@ import n25.viruscomponent.Nucleoid;
 import n25.viruscomponent.VirusComponent;
 
 public class Rhinovirus extends Virus{
-    private final int TIME = 5000;
-    public Rhinovirus(String name, Location center, int radius, int unitSize){
+    public Rhinovirus(Location center, int radius, int unitSize)
+    {
+        super(center, radius, unitSize);
         this.isEnvelopedVirus = false;
-        this.name = name;
-        this.radius = radius;
-        this.unitSize = unitSize;
 
         List<Location> enzymeLocations = new ArrayList<>();
         enzymeLocations.add(center.clone());
@@ -43,25 +40,12 @@ public class Rhinovirus extends Virus{
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
     }
-    private int angle;
-    private List<Rhinovirus> rhinoviruses = new ArrayList<>();
-    private List<Vector_2D> speeds = new ArrayList<>();
-    private List<Nucleoid> nucleoids = new ArrayList<>();
-    private List<Enzyme> enzymes = new ArrayList<>();
-
-    //Các biến dùng để vẽ thành phần virus
-    List<Shape> shapes = new ArrayList<>();
-    int circleCountForCircle;
-    int count;
-    Location startLocation, endLocation;
-    Vector_2D drawVector;
-    List<Location> baseLocations = new ArrayList<>();
 
     @Override
     public void displayInfection(Pane area, int timeSleep){
         virusStructure.draw(area);
-        Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
-        Cell cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
+        Location cellLocation = new Location(virusStructure.getCenter().x + radius * 7, virusStructure.getCenter().y);
+        cell = new Cell(cellLocation, radius * 3, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 
         // Giai đoạn 1:
@@ -74,9 +58,9 @@ public class Rhinovirus extends Virus{
         periods.get(0).setCycleCount(TIME / timeSleep);
         
         //Giai đoạn 2: Virus tổng hợp nucleoid và enzyme
-        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep/8), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
         {
-            Location nucleusLocation = new Location(cellLocation.x + (int) ((3) * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) ((3) * radius * Math.sin(Math.toRadians(angle))));
+            Location nucleusLocation = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
             baseLocations.add(nucleusLocation);
             Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.RED);
             nucleus.draw(area);
@@ -131,14 +115,14 @@ public class Rhinovirus extends Virus{
             {
                 Location location = baseLocation.clone();
                 location.move(drawVector);
-                Circle circle = new Circle(location.x, location.y, 2 * unitSize, Color.BLUE);
+                Circle circle = new Circle(location.x, location.y, 1.5 * unitSize, Color.BLUE);
                 shapes.add(circle);
                 area.getChildren().add(circle);
             }
 
             count++;
         })));
-        periods.get(2).setCycleCount(15);
+        periods.get(3).setCycleCount(15);
 
         // Giai đoạn 5:
         // Virus thoát khỏi tế bào
@@ -152,14 +136,15 @@ public class Rhinovirus extends Virus{
         {
             for (int i = 0; i < 4; i++)
             {
-                rhinoviruses.get(i).virusStructure.relocate(speeds.get(i));
+                viruses.get(i).virusStructure.relocate(speeds.get(i));
             }
         })));
-        periods.get(3).setCycleCount(TIME / timeSleep);
+        periods.get(4).setCycleCount(TIME / timeSleep);
 
         // Thực thi các giai đoạn
         // Giai đoạn 1:
         periods.get(0).play();
+        status = "Virus is penetrating into the cell";
 
         // Giai đoạn 2:
         angle = 270;
@@ -169,26 +154,29 @@ public class Rhinovirus extends Virus{
             baseLocations.clear();
             baseLocations.add(virusStructure.getCenter());
             periods.get(1).play();
+            status = "Virus is synthesizing nucleoid and enzyme";
         });
 
-         // Giai đoạn 3:
-         periods.get(1).setOnFinished( e -> 
-         {
-             count = 0;
-             angle = -30;
-             startLocation = new Location(0, -radius);
-             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-             periods.get(2).play();
-            });
+        // Giai đoạn 3:
+        periods.get(1).setOnFinished( e -> 
+        {
+            count = 0;
+            angle = -30;
+            startLocation = new Location(0, -radius);
+            endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
+            periods.get(2).play();
+            status = "Virus is completing capsit";
+        });
 
-          // Giai đoạn 4:
-          periods.get(2).setOnFinished(e -> 
-          {
+        // Giai đoạn 4:
+        periods.get(2).setOnFinished(e -> 
+        {
             count = 0;
             angle = -30;
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
             periods.get(3).play();
+            status = "Virus is creating VP1, VP2, VP3, VP4";
         });
 
         // Giai đoạn 5: 
@@ -203,22 +191,21 @@ public class Rhinovirus extends Virus{
             enzymes.clear();
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
-            rhinoviruses.clear();
-            rhinoviruses.add(this);
+            viruses.clear();
+            viruses.add(this);
             for (int i = 1; i < 4; i++)
             {
-                Rhinovirus rhinovirus = new Rhinovirus("RHINO", baseLocations.get(i), radius, unitSize);
+                Rhinovirus rhinovirus = new Rhinovirus(baseLocations.get(i), radius, unitSize);
                 rhinovirus.displayStructure(area);
-                rhinoviruses.add(rhinovirus);
+                viruses.add(rhinovirus);
             }
             periods.get(4).play();
+            status = "Virus is escaping from the cell";
         });
-    }
-    public void dispose()
-    {
-        super.dispose();
-        nucleoids.forEach(nucleoid -> nucleoid.dispose());
-        enzymes.forEach(enzyme -> enzyme.dispose());
-        rhinoviruses.forEach(rhinovirus -> rhinovirus.dispose());
+
+        periods.get(4).setOnFinished(e -> 
+        {
+            status = "Completed";
+        });
     }
 }
