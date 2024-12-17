@@ -50,13 +50,6 @@ public class HAV extends Virus {
     Vector_2D drawVector;
     List<Location> baseLocations = new ArrayList<>();
 
-    // Khai báo các giai đoạn
-    private Timeline getIn;
-    private Timeline synthesis;
-    private Timeline createCapsit;
-    private Timeline createAntigen;
-    private Timeline getOut;
-
     @Override
     public void displayInfection(Pane area, int timeSleep) {
         virusStructure.draw(area);
@@ -64,27 +57,28 @@ public class HAV extends Virus {
         Cell cell = new Cell(cellLocation, radius * 3, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 
+        periods.clear();    
         // Giai đoạn 1:
         // Virus xâm nhập vào tế bào
         Vector_2D speed = new Vector_2D(5 * radius * timeSleep / TIME, 0);
-        getIn = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             if (stopFlag)
             {
-                getIn.stop();
+                periods.get(0).stop();
                 return;
             }
             virusStructure.relocate(speed);
-        }));
-        getIn.setCycleCount(TIME / timeSleep);
+        })));
+        periods.get(0).setCycleCount(TIME / timeSleep);
         
         // Giai đoạn 2:
         // Virus tổng hợp nucleoid
-        synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
         {
             if (stopFlag)
             {
-                synthesis.stop();
+                periods.get(1).stop();
                 return;
             }
             Location nucleusLocation = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
@@ -93,18 +87,18 @@ public class HAV extends Virus {
             nucleus.draw(area);
             nucleoids.add(nucleus);
             angle += 90;
-        }));
-        synthesis.setCycleCount(3);
+        })));
+        periods.get(1).setCycleCount(3);
 
         // Giai đoạn 3: 
         // Virus hoàn thiện các thành phần khác
         // Tạo vỏ capsit
         circleCountForHexagon = (int) (radius / (2 * unitSize));
-        createCapsit = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             if (stopFlag)
             {
-                createCapsit.stop();
+                periods.get(2).stop();
                 return;
             }
             if (count == circleCountForHexagon)
@@ -124,13 +118,13 @@ public class HAV extends Virus {
                 area.getChildren().add(circle);
             }
             count++;
-        }));
-        createCapsit.setCycleCount(6 * circleCountForHexagon);
+        })));
+        periods.get(2).setCycleCount(6 * circleCountForHexagon);
 
         // Giai đoạn 4:
         // Tạo các thành phần phụ của virus
         // Tạo antigen
-        createAntigen = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             if (count == 3)
             {
@@ -149,8 +143,8 @@ public class HAV extends Virus {
                 area.getChildren().add(circle);
             }
             count++;
-        }));
-        createAntigen.setCycleCount(18);
+        })));
+        periods.get(3).setCycleCount(18);
 
         // Giai đoạn 5:
         // Virus thoát khỏi tế bào
@@ -160,52 +154,52 @@ public class HAV extends Virus {
             Vector_2D speedHAV = new Vector_2D((int) (3 * radius * timeSleep / TIME * Math.cos(Math.toRadians(180 + i * 90))), (int) (3 * radius * timeSleep / TIME * Math.sin(Math.toRadians(180 + i * 90))));
             speeds.add(speedHAV);
         }
-        getOut = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             for (int i = 0; i < 4; i++)
             {
                 havs.get(i).virusStructure.relocate(speeds.get(i));
             }
-        }));
-        getOut.setCycleCount(TIME / timeSleep);
+        })));
+        periods.get(4).setCycleCount(TIME / timeSleep);
 
         //--------------------------------------------------------------------------------
         // Thực thi các giai đoạn
         // Giai đoạn 1:
-        getIn.play();
+        periods.get(0).play();
 
         // Giai đoạn 2:
         angle = 270;
-        getIn.setOnFinished(e -> 
+        periods.get(0).setOnFinished(e -> 
         {
             virusStructure.components.get(1).dispose();
             baseLocations.clear();
             baseLocations.add(virusStructure.getCenter());
-            synthesis.play();
+            periods.get(1).play();
         });
 
         // Giai đoạn 3:
-        synthesis.setOnFinished( e -> 
+        periods.get(1).setOnFinished( e -> 
         {
             count = 0;
             angle = -30;
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            createCapsit.play();
+            periods.get(2).play();
         });
         
         // Giai đoạn 4:
-        createCapsit.setOnFinished(e -> 
+        periods.get(2).setOnFinished(e -> 
         {
             count = 0;
             angle = -30;
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            createAntigen.play();
+            periods.get(3).play();
         });
 
         // Giai đoạn 5: 
-        createAntigen.setOnFinished(e -> 
+        periods.get(3).setOnFinished(e -> 
         {
             cell.dispose();
             nucleoids.forEach(nucleoid -> nucleoid.dispose());
@@ -220,45 +214,7 @@ public class HAV extends Virus {
                 hav.displayStructure(area);
                 havs.add(hav);
             }
-            getOut.play();
+            periods.get(4).play();
         });
-    }
-
-    private Timeline pausedTimeline;
-    public void pause()
-    {
-        if (getIn.getStatus() == Timeline.Status.RUNNING)
-        {
-            pausedTimeline = getIn;
-            getIn.pause();
-        }
-        else if (synthesis.getStatus() == Timeline.Status.RUNNING)
-        {
-            pausedTimeline = synthesis;
-            synthesis.pause();
-        }
-        else if (createCapsit.getStatus() == Timeline.Status.RUNNING)
-        {
-            pausedTimeline = createCapsit;
-            createCapsit.pause();
-        }
-        else if (createAntigen.getStatus() == Timeline.Status.RUNNING)
-        {
-            pausedTimeline = createAntigen;
-            createAntigen.pause();
-        }
-        else if (getOut.getStatus() == Timeline.Status.RUNNING)
-        {
-            pausedTimeline = getOut;
-            getOut.pause();
-        }
-    }
-
-    public void resume()
-    {
-        if (pausedTimeline != null)
-        {
-            pausedTimeline.play();
-        }
     }
 }
