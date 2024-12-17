@@ -190,8 +190,8 @@ public class SarCoV2 extends Virus {
         // Khởi tạo speeds
         for (int i = 0; i < 4; i++)
         {
-            Vector_2D speedHIV = new Vector_2D((int) (3 * radius * timeSleep / TIME * Math.cos(Math.toRadians(180 + i * 90))), (int) (3 * radius * timeSleep / TIME * Math.sin(Math.toRadians(180 + i * 90))));
-            speeds.add(speedHIV);
+            Vector_2D speedSarCoV2 = new Vector_2D((int) (3 * radius * timeSleep / TIME * Math.cos(Math.toRadians(180 + i * 90))), (int) (3 * radius * timeSleep / TIME * Math.sin(Math.toRadians(180 + i * 90))));
+            speeds.add(speedSarCoV2);
         }
         Timeline getOut = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {

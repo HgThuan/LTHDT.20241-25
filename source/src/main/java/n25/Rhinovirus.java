@@ -17,9 +17,8 @@ public class Rhinovirus extends Virus{
         this.unitSize = unitSize;
 
         List<VirusComponent> components = List.of(
-            new MatrixProtein(center.clone(), radius + radius/2, unitSize, Color.RED, Color.BLUE, SubComponentType.ANTIGENORENZYME),
-            new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
-            new Capsit(center.clone(), radius, unitSize, Color.BLUE, Color.ALICEBLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGENORENZYME)
+    /*0*/   new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN), 
+    /*1*/   new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLACK, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGENORENZYME)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
@@ -28,6 +27,19 @@ public class Rhinovirus extends Virus{
     private List<Rhinovirus> rhinoviruses = new ArrayList<>();
     private List<Vector_2D> speeds = new ArrayList<>();
     private List<Nucleoid> nucleoids = new ArrayList<>();
+<<<<<<< Updated upstream
+=======
+    private List<Enzyme> enzymes = new ArrayList<>();
+
+    //Các biến dùng để vẽ thành phần virus
+    private List<Shape> shapes = new ArrayList<>();
+    private int circleCountForHexagon;
+    private int count;
+    private Location startLocation, endLocation;
+    private Vector_2D drawVector;
+    private List<Location> baseLocations = new ArrayList<>();
+
+>>>>>>> Stashed changes
     @Override
     public void displayInfection(Pane area, int timeSleep){
         virusStructure.draw(area);

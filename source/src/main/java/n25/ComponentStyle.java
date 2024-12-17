@@ -11,7 +11,8 @@ import javafx.scene.shape.Shape;
 public class ComponentStyle {
     public static final int CIRCLE_STYLE = 0;
     public static final int HEXAGON_STYLE = 1;
-    public static final int SPIRAL_STYLE = 2;
+    public static final int SINGLE_SPIRAL_STYLE = 2;
+    public static final int DOUBLE_SPIRAL_STYLE = 3;
 
     public static List<Location> createComponent(int componentStyle, List<Shape> shapes, Location center, double radius, int unitSize, Color color) {
         List<Location> result = new ArrayList<>();
@@ -59,13 +60,31 @@ public class ComponentStyle {
                     result.add(l5);
                 }
                 break;
-            case SPIRAL_STYLE:
-                // Lấy tọa độ trung tâm từ Location
+            case SINGLE_SPIRAL_STYLE:
                 double centerX = center.x;
-                double centerY = center.y - radius / 2;
-
+                double centerY = center.y;
+            
                 double stepHeight = 2;
-                double amplitude = radius / 4.0; // Biên độ của xoắn ốc (độ rộng giữa hai đường xoắn)
+                double amplitude = radius / 4.0;
+                angle = 0;
+                for (int i = 0; i < radius / stepHeight; i++) {
+                    angle = (int) (i * 1440 / radius);
+        
+                    double x = centerX - amplitude * Math.cos(Math.toRadians(angle));
+                    double y = centerY + i * stepHeight;
+        
+                    Circle leftCircle = new Circle(x, y, unitSize);
+                    leftCircle.setFill(color);
+                    shapes.add(leftCircle);
+                }
+                break;
+                case DOUBLE_SPIRAL_STYLE:
+                // Lấy tọa độ trung tâm từ Location
+                centerX = center.x;
+                centerY = center.y - radius / 2;
+
+                stepHeight = 2;
+                amplitude = radius / 4.0; // Biên độ của xoắn ốc (độ rộng giữa hai đường xoắn)
 
                 for (int i = 0; i < radius / stepHeight; i++) {
                     // Góc hiện tại (dùng để tính sin/cos cho vị trí xoắn ốc)
@@ -107,6 +126,7 @@ public class ComponentStyle {
                         shapes.add(basePair);
                     }
                 }
+                break;
             default:
                 break;
         }
