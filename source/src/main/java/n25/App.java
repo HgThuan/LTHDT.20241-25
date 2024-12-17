@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
@@ -25,11 +24,11 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        SarCoV2 sarCoV2 = new SarCoV2("Sar CoV 2", new Location(200,300), 50, 3);
+        SarCoV2 sarCoV2 = new SarCoV2("Sar CoV 2", new Location(200,400), 50, 3);
         sarCoV2.displayInfection(pane, 100);
         //
         root.getChildren().add(pane);
-        scene = new Scene(root, 1000, 900);
+        scene = new Scene(root, 1000, 800);
         stage.setScene(scene);
         stage.show();
     }   

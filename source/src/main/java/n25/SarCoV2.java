@@ -18,10 +18,17 @@ public class SarCoV2 extends Virus {
         this.radius = radius;
         this.unitSize = unitSize;
 
+        List<Location> enzymeLocations = new ArrayList<>();
+        enzymeLocations.add(center.clone());
+        enzymeLocations.add(center.clone());
+        enzymeLocations.get(0).move(new Vector_2D(-radius / 3, 0));
+        enzymeLocations.get(1).move(new Vector_2D(radius / 3, 0));
         List<VirusComponent> components = List.of(
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
             new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGENORENZYME),
-            new Envelope(center.clone(), (int) (radius * 1.5), unitSize, Color.YELLOW, Color.RED, SubComponentType.GLYCOPROTEINANDSPIKE)
+            new Envelope(center.clone(), (int) (radius * 1.5), unitSize, Color.YELLOW, Color.RED, SubComponentType.GLYCOPROTEINANDSPIKE),
+            new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.BLACK),
+            new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.BLACK)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
@@ -31,6 +38,7 @@ public class SarCoV2 extends Virus {
     private List<SarCoV2> sarCoV2s = new ArrayList<>();
     private List<Vector_2D> speeds = new ArrayList<>();
     private List<Nucleoid> nucleoids = new ArrayList<>();
+    private List<Enzyme> enzymes = new ArrayList<>();
 
     // Các biến dùng để vẽ các thành phần của virus
     private List<Shape> shapes = new ArrayList<>();
@@ -63,6 +71,18 @@ public class SarCoV2 extends Virus {
             Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.GREEN);
             nucleus.draw(area);
             nucleoids.add(nucleus);
+
+            Location enzymeLocation1 = nucleusLocation.clone();
+            enzymeLocation1.move(new Vector_2D(-radius / 3, 0));
+            Enzyme enzyme1 = new Enzyme(enzymeLocation1, radius / 3, unitSize, Color.BLACK);
+            enzyme1.draw(area);
+            enzymes.add(enzyme1);
+            
+            Location enzumeLocation2 = nucleusLocation.clone();
+            enzumeLocation2.move(new Vector_2D(radius / 3, 0));
+            Enzyme enzyme2 = new Enzyme(enzumeLocation2, radius / 3, unitSize, Color.BLACK);
+            enzymes.add(enzyme2);
+            enzyme2.draw(area);
             angle += 90;
         }));
         synthesis.setCycleCount(3);
@@ -264,6 +284,8 @@ public class SarCoV2 extends Virus {
             cell.dispose();
             nucleoids.forEach(nucleoid -> nucleoid.dispose());
             nucleoids.clear();
+            enzymes.forEach(enzyme -> enzyme.dispose());
+            enzymes.clear();
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
             sarCoV2s.clear();

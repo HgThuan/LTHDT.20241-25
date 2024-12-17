@@ -62,7 +62,7 @@ public class ComponentStyle {
                 break;
             case SINGLE_SPIRAL_STYLE:
                 double centerX = center.x;
-                double centerY = center.y;
+                double centerY = center.y - radius / 2;
             
                 double stepHeight = 2;
                 double amplitude = radius / 4.0;
