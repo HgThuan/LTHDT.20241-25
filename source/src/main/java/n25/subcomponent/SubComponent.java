@@ -1,4 +1,4 @@
-package n25;
+package n25.subcomponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,15 @@ import java.util.List;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import n25.Location;
+import n25.Vector_2D;
 
 public abstract class SubComponent {
     protected Location location;
     protected int unitSize;
     protected Color color;
     protected Pane area;
-    protected List<Shape> shapes = new ArrayList<>();
+    public List<Shape> shapes = new ArrayList<>();
 
     public abstract void draw(Pane area);
     

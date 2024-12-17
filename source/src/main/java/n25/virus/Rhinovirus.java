@@ -1,4 +1,4 @@
-package  n25;
+package  n25.virus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import n25.Cell;
+import n25.Location;
+import n25.Vector_2D;
+import n25.VirusStructure;
+import n25.subcomponent.SubComponentType;
+import n25.viruscomponent.Capsit;
+import n25.viruscomponent.ComponentStyle;
+import n25.viruscomponent.Enzyme;
+import n25.viruscomponent.Nucleoid;
+import n25.viruscomponent.VirusComponent;
 
 public class Rhinovirus extends Virus{
     private final int TIME = 5000;

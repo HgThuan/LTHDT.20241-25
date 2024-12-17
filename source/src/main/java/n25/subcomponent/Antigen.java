@@ -1,8 +1,9 @@
-package n25;
+package n25.subcomponent;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import n25.Location;
 
 public class Antigen extends SubComponent {
 

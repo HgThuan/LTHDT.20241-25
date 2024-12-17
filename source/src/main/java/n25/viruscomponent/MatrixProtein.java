@@ -1,6 +1,7 @@
-package n25;
+package n25.viruscomponent;
 
 import javafx.scene.paint.Color;
+import n25.Location;
 
 public class MatrixProtein extends VirusComponent {
     

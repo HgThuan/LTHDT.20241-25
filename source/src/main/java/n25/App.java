@@ -5,10 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-
 import java.io.IOException;
 
 /**
@@ -20,18 +16,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
-        StackPane root = new StackPane();
-        Pane pane = new Pane();
-        // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        Rhinovirus rhinovirus = new Rhinovirus("Rhinovirus", new Location(300, 400), 50, 3);
-        rhinovirus.displayInfection(pane, 100);
-        //
-        root.getChildren().add(pane);
-        scene = new Scene(root, 1000, 800);
+        scene = new Scene(loadFXML("primary"), 640, 480);
         stage.setScene(scene);
         stage.show();
-    }   
+    }
 
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));

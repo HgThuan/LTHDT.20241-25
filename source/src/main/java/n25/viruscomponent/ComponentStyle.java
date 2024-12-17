@@ -1,4 +1,4 @@
-package n25;
+package n25.viruscomponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
+import n25.Location;
 
 public class ComponentStyle {
     public static final int CIRCLE_STYLE = 0;

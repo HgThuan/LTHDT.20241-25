@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import n25.viruscomponent.ComponentStyle;
 
 public class Cell {
     private Location location;                          // Vị trí của tế bào

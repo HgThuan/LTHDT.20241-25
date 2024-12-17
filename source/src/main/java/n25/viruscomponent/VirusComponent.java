@@ -1,4 +1,4 @@
-package n25;
+package n25.viruscomponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,10 @@ import java.util.List;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import n25.Location;
+import n25.Vector_2D;
+import n25.subcomponent.SubComponent;
+import n25.subcomponent.SubComponentType;
 
 public abstract class VirusComponent {
     protected Location center;
@@ -54,7 +58,7 @@ public abstract class VirusComponent {
         shapes.clear();
     }
 
-    protected void draw()
+    public void draw()
     {
         try
         {
@@ -83,7 +87,7 @@ public abstract class VirusComponent {
         finally{}
     }
 
-    protected void draw(Pane area)
+    public void draw(Pane area)
     {
         this.area = area;
         draw(); 

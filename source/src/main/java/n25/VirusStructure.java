@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.layout.Pane;
+import n25.viruscomponent.VirusComponent;
 
 public class VirusStructure {
     public List<VirusComponent> components = new ArrayList<>();
     private Location center;
     public Location getCenter() {
         return center;
-    }
-
-    public VirusStructure() {
     }
 
     public VirusStructure(List<VirusComponent> components, Location center) {

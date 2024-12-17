@@ -1,6 +1,7 @@
-package n25;
+package n25.virus;
 
 import javafx.scene.layout.Pane;
+import n25.VirusStructure;
 
 public abstract class Virus {
     protected boolean isEnvelopedVirus;

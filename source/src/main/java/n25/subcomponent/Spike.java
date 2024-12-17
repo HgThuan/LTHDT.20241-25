@@ -1,8 +1,9 @@
-package n25;
+package n25.subcomponent;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import n25.Location;
 
 public class Spike extends SubComponent {
     private int direction;

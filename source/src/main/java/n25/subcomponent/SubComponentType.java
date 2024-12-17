@@ -1,8 +1,9 @@
-package n25;
+package n25.subcomponent;
 
 import java.util.List;
 
 import javafx.scene.paint.Color;
+import n25.Location;
 
 public class SubComponentType {
     public static final int NONE = 0;

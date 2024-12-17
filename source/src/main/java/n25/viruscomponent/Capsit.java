@@ -1,7 +1,8 @@
-package n25;
+package n25.viruscomponent;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import n25.Location;
 
 public class Capsit extends VirusComponent {
 
