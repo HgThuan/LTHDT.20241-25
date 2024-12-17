@@ -67,14 +67,15 @@ public class Rhinovirus extends Virus{
         // Giai đoạn 1:
         // Virus xâm nhập vào tế bào
         Vector_2D speed = new Vector_2D(5 * radius * timeSleep / TIME, 0);
-        Timeline getIn = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             virusStructure.relocate(speed);
-        }));
-        getIn.setCycleCount(TIME / timeSleep);
+        })));
+        periods.get(0).setCycleCount(TIME / timeSleep);
         
         //Giai đoạn 2: Virus tổng hợp nucleoid và enzyme
-        Timeline synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> {
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep/8), e -> 
+        {
             Location nucleusLocation = new Location(cellLocation.x + (int) ((3) * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) ((3) * radius * Math.sin(Math.toRadians(angle))));
             baseLocations.add(nucleusLocation);
             Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.RED);
@@ -93,14 +94,14 @@ public class Rhinovirus extends Virus{
             enzymes.add(enzyme2);
             enzyme2.draw(area);
             angle += 90;
-        }));
-        synthesis.setCycleCount(3); 
+        })));
+        periods.get(1).setCycleCount(3); 
 
         // Giai đoạn 3: 
         // Virus hoàn thiện các thành phần khác
         // Tạo vỏ capsit
         circleCountForCircle = (int) (Math.PI * radius / unitSize);
-        Timeline createCapsit = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             double angle = 2 * Math.PI * count / circleCountForCircle;
             drawVector = new Vector_2D((int) (radius * Math.cos(angle)), (int) (radius * Math.sin(angle)));
@@ -115,13 +116,13 @@ public class Rhinovirus extends Virus{
             }
 
             count++;
-        }));
-        createCapsit.setCycleCount(circleCountForCircle);
+        })));
+        periods.get(2).setCycleCount(circleCountForCircle);
 
          // Giai đoạn 4:
         // Tạo các thành phần phụ của virus
         // Tạo antigen
-        Timeline createAntigen = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             double angle = 2 * Math.PI * count / 15;
             drawVector = new Vector_2D((int) (radius * Math.cos(angle)), (int) (radius * Math.sin(angle)));
@@ -136,8 +137,8 @@ public class Rhinovirus extends Virus{
             }
 
             count++;
-        }));
-        createAntigen.setCycleCount(15);
+        })));
+        periods.get(2).setCycleCount(15);
 
         // Giai đoạn 5:
         // Virus thoát khỏi tế bào
@@ -147,51 +148,51 @@ public class Rhinovirus extends Virus{
             Vector_2D speedRHINO = new Vector_2D((int) (3 * radius * timeSleep / TIME * Math.cos(Math.toRadians(180 + i * 90))), (int) (3 * radius * timeSleep / TIME * Math.sin(Math.toRadians(180 + i * 90))));
             speeds.add(speedRHINO);
         }
-        Timeline getOut = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             for (int i = 0; i < 4; i++)
             {
                 rhinoviruses.get(i).virusStructure.relocate(speeds.get(i));
             }
-        }));
-        getOut.setCycleCount(TIME / timeSleep);
+        })));
+        periods.get(3).setCycleCount(TIME / timeSleep);
 
         // Thực thi các giai đoạn
         // Giai đoạn 1:
-        getIn.play();
+        periods.get(0).play();
 
         // Giai đoạn 2:
         angle = 270;
-        getIn.setOnFinished(e -> 
+        periods.get(0).setOnFinished(e -> 
         {
             virusStructure.components.get(1).dispose();
             baseLocations.clear();
             baseLocations.add(virusStructure.getCenter());
-            synthesis.play();
+            periods.get(1).play();
         });
 
          // Giai đoạn 3:
-         synthesis.setOnFinished( e -> 
+         periods.get(1).setOnFinished( e -> 
          {
              count = 0;
              angle = -30;
              startLocation = new Location(0, -radius);
              endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-             createCapsit.play();
-         });
+             periods.get(2).play();
+            });
 
           // Giai đoạn 4:
-        createCapsit.setOnFinished(e -> 
-        {
+          periods.get(2).setOnFinished(e -> 
+          {
             count = 0;
             angle = -30;
             startLocation = new Location(0, -radius);
             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            createAntigen.play();
+            periods.get(3).play();
         });
 
         // Giai đoạn 5: 
-        createAntigen.setOnFinished(e -> 
+        periods.get(3).setOnFinished(e -> 
         {
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
@@ -210,7 +211,14 @@ public class Rhinovirus extends Virus{
                 rhinovirus.displayStructure(area);
                 rhinoviruses.add(rhinovirus);
             }
-            getOut.play();
+            periods.get(4).play();
         });
+    }
+    public void dispose()
+    {
+        super.dispose();
+        nucleoids.forEach(nucleoid -> nucleoid.dispose());
+        enzymes.forEach(enzyme -> enzyme.dispose());
+        rhinoviruses.forEach(hav -> hav.dispose());
     }
 }
