@@ -50,11 +50,14 @@ public class HAV extends Virus {
     Vector_2D drawVector;
     List<Location> baseLocations = new ArrayList<>();
 
+    // Biến dùng để vẽ tế bào
+    private Cell cell;
+
     @Override
     public void displayInfection(Pane area, int timeSleep) {
         virusStructure.draw(area);
         Location cellLocation = new Location(virusStructure.getCenter().x + radius * 7, virusStructure.getCenter().y);
-        Cell cell = new Cell(cellLocation, radius * 3, 5, Color.LIGHTBLUE, Color.BLACK);
+        cell = new Cell(cellLocation, radius * 3, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 
         periods.clear();    
@@ -206,6 +209,7 @@ public class HAV extends Virus {
     public void dispose()
     {
         super.dispose();
+        cell.dispose(); 
         nucleoids.forEach(nucleoid -> nucleoid.dispose());
         havs.forEach(hav -> hav.dispose());
     }

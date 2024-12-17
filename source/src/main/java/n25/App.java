@@ -88,15 +88,22 @@ public class App extends Application {
         btnDisplay.setLayoutY(160);
         btnDisplay.setPrefSize(150, 20);
         btnDisplay.setOnMouseClicked(e -> {
+            if (displayedVirus != null)
+            {
+                displayedVirus.dispose();
+            }
             switch (cbSelectVirus.getValue()) {
                 case "HIV":
                     HIV hiv = new HIV("HIV", new Location(400, 300), 50, 3);
                     displayedVirus = hiv;
                     break;
+                case "HAV":
+                    HAV hav = new HAV("HAV", new Location(400, 300), 50, 3);
+                    displayedVirus = hav;
+                    break;
                 default:
                     break;
             }
-            
             if (cbSelectDisplay.getValue().equals("Structure"))
             {
                 displayedVirus.displayStructure(pane);
