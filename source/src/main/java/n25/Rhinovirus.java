@@ -26,7 +26,7 @@ public class Rhinovirus extends Virus{
         enzymeLocations.get(1).move(new Vector_2D(radius / 3, 0));
         List<VirusComponent> components = List.of(
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.RED), 
-            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGENORENZYME),
+            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN),
             new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.GREEN),
             new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.GREEN)
         );

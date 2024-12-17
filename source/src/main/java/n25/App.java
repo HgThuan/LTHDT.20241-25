@@ -24,8 +24,8 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        SarCoV2 sarCoV2 = new SarCoV2("SarCoV2", new Location(200, 400), 50, 3);
-        sarCoV2.displayInfection(pane, 100);
+        Rhinovirus rhinovirus = new Rhinovirus("Rhinovirus", new Location(300, 400), 50, 3);
+        rhinovirus.displayInfection(pane, 100);
         //
         root.getChildren().add(pane);
         scene = new Scene(root, 1000, 800);
