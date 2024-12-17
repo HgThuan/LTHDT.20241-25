@@ -21,7 +21,7 @@ public class HAV extends Virus {
 
         List<VirusComponent> components = List.of(
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
-            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGENORENZYME)
+            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;

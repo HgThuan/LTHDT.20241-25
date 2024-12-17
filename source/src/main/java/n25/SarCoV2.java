@@ -25,7 +25,7 @@ public class SarCoV2 extends Virus {
         enzymeLocations.get(1).move(new Vector_2D(radius / 3, 0));
         List<VirusComponent> components = List.of(
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
-            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGENORENZYME),
+            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN),
             new Envelope(center.clone(), (int) (radius * 1.5), unitSize, Color.YELLOW, Color.RED, SubComponentType.GLYCOPROTEINANDSPIKE),
             new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.BLACK),
             new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.BLACK)
@@ -154,7 +154,7 @@ public class SarCoV2 extends Virus {
             // Vẽ từng điểm trên vòng tròn với baseLocations làm tâm
             for (Location baseLocation : baseLocations) {
                 Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, 1 * unitSize); // Bán kính điểm là 2 * unitSize
+                Circle circle = new Circle(newLocation.x, newLocation.y, unitSize);
                 circle.setFill(Color.YELLOW); // Màu sắc của điểm
                 shapes.add(circle);
                 area.getChildren().add(circle);

@@ -18,10 +18,16 @@ public class Rhinovirus extends Virus{
         this.radius = radius;
         this.unitSize = unitSize;
 
+        List<Location> enzymeLocations = new ArrayList<>();
+        enzymeLocations.add(center.clone());
+        enzymeLocations.add(center.clone());
+        enzymeLocations.get(0).move(new Vector_2D(-radius / 3, 0));
+        enzymeLocations.get(1).move(new Vector_2D(radius / 3, 0));
         List<VirusComponent> components = List.of(
-    /*0*/   new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN), 
-    /*1*/   new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN),
-    /*2*/   new Enzyme(center.clone(), radius, unitSize, Color.BLACK, Color.AZURE)
+            new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN), 
+            new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN),
+            new Enzyme(enzymeLocations.get(0), radius / 3, unitSize, Color.BLACK),
+            new Enzyme(enzymeLocations.get(1), radius / 3, unitSize, Color.BLACK)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
@@ -35,7 +41,6 @@ public class Rhinovirus extends Virus{
     //Các biến dùng để vẽ thành phần virus
     List<Shape> shapes = new ArrayList<>();
     int circleCountForCircle;
-    int circleCountForHexagon;
     int count;
     Location startLocation, endLocation;
     Vector_2D drawVector;
@@ -59,76 +64,69 @@ public class Rhinovirus extends Virus{
         
         //Giai đoạn 2: Virus tổng hợp nucleoid và enzyme
         Timeline synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> {
-        // Tính toán vị trí dựa trên góc hiện tại
-        Location synthesisLocation = new Location(
-        cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))),
-        cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle)))
-        );
-        // Tạo và vẽ enzyme
-        Enzyme enzyme = new Enzyme(synthesisLocation.clone(), radius , unitSize, Color.BROWN, Color.AQUAMARINE);
-        enzyme.draw(area);
-        enzymes.add(enzyme);
-        // Tạo và vẽ nucleoid
-        Nucleoid nucleoid = new Nucleoid(synthesisLocation.clone(), radius / 2, unitSize, Color.GREEN);
-        nucleoid.draw(area);
-        nucleoids.add(nucleoid);
-        // Lưu vị trí cơ sở
-        baseLocations.add(synthesisLocation);
-        // Tăng góc để chuẩn bị cho vòng lặp tiếp theo
-        angle += 90;
+            Location nucleusLocation = new Location(cellLocation.x + (int) ((3) * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) ((3) * radius * Math.sin(Math.toRadians(angle))));
+            baseLocations.add(nucleusLocation);
+            Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.GREEN);
+            nucleus.draw(area);
+            nucleoids.add(nucleus);
+
+            Location enzymeLocation1 = nucleusLocation.clone();
+            enzymeLocation1.move(new Vector_2D(-radius / 3, 0));
+            Enzyme enzyme1 = new Enzyme(enzymeLocation1, radius / 3, unitSize, Color.BLACK);
+            enzyme1.draw(area);
+            enzymes.add(enzyme1);
+            
+            Location enzumeLocation2 = nucleusLocation.clone();
+            enzumeLocation2.move(new Vector_2D(radius / 3, 0));
+            Enzyme enzyme2 = new Enzyme(enzumeLocation2, radius / 3, unitSize, Color.BLACK);
+            enzymes.add(enzyme2);
+            enzyme2.draw(area);
+            angle += 90;
         }));
         synthesis.setCycleCount(3); 
 
         // Giai đoạn 3: 
         // Virus hoàn thiện các thành phần khác
         // Tạo vỏ capsit
-        circleCountForHexagon = (int) (radius / (2 * unitSize));
+        circleCountForCircle = (int) (Math.PI * radius / unitSize);
         Timeline createCapsit = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
-            if (count == circleCountForHexagon)
-            {
-                count = 0;
-                angle += 60;
-                startLocation = endLocation.clone();
-                endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            }
-            drawVector = new Vector_2D(startLocation.x + (endLocation.x - startLocation.x) * count / circleCountForHexagon, startLocation.y + (endLocation.y - startLocation.y) * count / circleCountForHexagon);
+            double angle = 2 * Math.PI * count / circleCountForCircle;
+            drawVector = new Vector_2D((int) (radius * Math.cos(angle)), (int) (radius * Math.sin(angle)));
+
             for (Location baseLocation : baseLocations)
             {
-                Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, unitSize);
-                circle.setFill(Color.GOLD);
+                Location location = baseLocation.clone();
+                location.move(drawVector);
+                Circle circle = new Circle(location.x, location.y, unitSize, Color.GOLD);
                 shapes.add(circle);
                 area.getChildren().add(circle);
             }
+
             count++;
         }));
-        createCapsit.setCycleCount(6 * circleCountForHexagon);
+        createCapsit.setCycleCount(circleCountForCircle);
 
          // Giai đoạn 4:
         // Tạo các thành phần phụ của virus
         // Tạo antigen
         Timeline createAntigen = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
-            if (count == 3)
-            {
-                count = 0;
-                angle += 60;
-                startLocation = endLocation.clone();
-                endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
-            }
-            drawVector = new Vector_2D(startLocation.x + (endLocation.x - startLocation.x) * count / 3, startLocation.y + (endLocation.y - startLocation.y) * count / 3);
+            double angle = 2 * Math.PI * count / 15;
+            drawVector = new Vector_2D((int) (radius * Math.cos(angle)), (int) (radius * Math.sin(angle)));
+
             for (Location baseLocation : baseLocations)
             {
-                Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, 2 * unitSize);
-                circle.setFill(Color.BLUE);  
+                Location location = baseLocation.clone();
+                location.move(drawVector);
+                Circle circle = new Circle(location.x, location.y, 2 * unitSize, Color.BLUE);
                 shapes.add(circle);
                 area.getChildren().add(circle);
             }
+
             count++;
         }));
-        createAntigen.setCycleCount(18);
+        createAntigen.setCycleCount(15);
 
         // Giai đoạn 5:
         // Virus thoát khỏi tế bào
@@ -189,6 +187,8 @@ public class Rhinovirus extends Virus{
             cell.dispose();
             nucleoids.forEach(nucleoid -> nucleoid.dispose());
             nucleoids.clear();
+            enzymes.forEach(enzyme -> enzyme.dispose());
+            enzymes.clear();
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
             rhinoviruses.clear();
