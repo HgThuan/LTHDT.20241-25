@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 
 public class SubComponentType {
     public static final int NONE = 0;
-    public static final int ANTIGEN = 1;
+    public static final int ANTIGENORENZYME = 1;
     public static final int GLYCOPROTEIN = 2;
     public static final int SPIKE = 4;
     public static final int ANTIGENANDGLYCOPROTEIN = 3;
@@ -26,16 +26,18 @@ public class SubComponentType {
             if (antigen == 1)
             {
                 subComponents.add(new Antigen(drawLocations.get(i), unitSize, color));
+                i++;
             }
             if (glycoprotein == 1)
             {
                 subComponents.add(new Glycoprotein(drawLocations.get(i), i * 360 / drawLocations.size(), unitSize, color));
+                i++;
             }
             if (spike == 1)
             {
                 subComponents.add(new Spike(drawLocations.get(i), i * 360 / drawLocations.size(), unitSize, color));
+                i++;
             }
-            i += numberOfSubComponents;
             if (numberOfSubComponents == 1)
                 i++;
         }

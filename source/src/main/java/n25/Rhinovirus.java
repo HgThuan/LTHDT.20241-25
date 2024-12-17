@@ -17,9 +17,9 @@ public class Rhinovirus extends Virus{
         this.unitSize = unitSize;
 
         List<VirusComponent> components = List.of(
-            new MatrixProtein(center.clone(), radius + radius/2, unitSize, Color.RED, Color.BLUE, SubComponentType.ANTIGEN),
+            new MatrixProtein(center.clone(), radius + radius/2, unitSize, Color.RED, Color.BLUE, SubComponentType.ANTIGENORENZYME),
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
-            new Capsit(center.clone(), radius, unitSize, Color.BLUE, Color.ALICEBLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN)
+            new Capsit(center.clone(), radius, unitSize, Color.BLUE, Color.ALICEBLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGENORENZYME)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
