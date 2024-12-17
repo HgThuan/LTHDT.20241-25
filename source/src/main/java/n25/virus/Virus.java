@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import n25.VirusStructure;
+import n25.viruscomponent.VirusComponent;
 
 public abstract class Virus {
     protected boolean isEnvelopedVirus;
@@ -14,7 +15,6 @@ public abstract class Virus {
     protected int radius;
     protected int unitSize;
     
-    public boolean stopFlag = false;
     public String status = "";
 
     protected List<Timeline> periods = new ArrayList<>();
@@ -49,6 +49,18 @@ public abstract class Virus {
         if (pausedTimeline != null)
         {
             pausedTimeline.play();
+        }
+    }
+
+    public void dispose()
+    {
+        for (Timeline period : periods)
+        {
+            period.stop();
+        }
+        for (VirusComponent component : virusStructure.components)
+        {
+            component.dispose();
         }
     }
 }

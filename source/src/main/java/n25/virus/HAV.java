@@ -63,11 +63,6 @@ public class HAV extends Virus {
         Vector_2D speed = new Vector_2D(5 * radius * timeSleep / TIME, 0);
         periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
-            if (stopFlag)
-            {
-                periods.get(0).stop();
-                return;
-            }
             virusStructure.relocate(speed);
         })));
         periods.get(0).setCycleCount(TIME / timeSleep);
@@ -76,11 +71,6 @@ public class HAV extends Virus {
         // Virus tổng hợp nucleoid
         periods.add(new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
         {
-            if (stopFlag)
-            {
-                periods.get(1).stop();
-                return;
-            }
             Location nucleusLocation = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
             baseLocations.add(nucleusLocation);
             Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.RED);
@@ -96,11 +86,6 @@ public class HAV extends Virus {
         circleCountForHexagon = (int) (radius / (2 * unitSize));
         periods.add(new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
-            if (stopFlag)
-            {
-                periods.get(2).stop();
-                return;
-            }
             if (count == circleCountForHexagon)
             {
                 count = 0;
@@ -216,5 +201,12 @@ public class HAV extends Virus {
             }
             periods.get(4).play();
         });
+    }
+
+    public void dispose()
+    {
+        super.dispose();
+        nucleoids.forEach(nucleoid -> nucleoid.dispose());
+        havs.forEach(hav -> hav.dispose());
     }
 }
