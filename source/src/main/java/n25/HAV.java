@@ -15,12 +15,13 @@ public class HAV extends Virus {
     private final int TIME = 5000;
     public HAV(String name, Location center, int radius, int unitSize)
     {
+        this.isEnvelopedVirus = false;
         this.name = name;
         this.radius = radius;
         this.unitSize = unitSize;
 
         List<VirusComponent> components = List.of(
-            new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
+            new Nucleoid(center.clone(), radius / 2, unitSize, Color.RED),
             new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
@@ -61,7 +62,7 @@ public class HAV extends Virus {
         {
             Location nucleusLocation = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
             baseLocations.add(nucleusLocation);
-            Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.GREEN);
+            Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.RED);
             nucleus.draw(area);
             nucleoids.add(nucleus);
             angle += 90;

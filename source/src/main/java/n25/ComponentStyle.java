@@ -121,7 +121,7 @@ public class ComponentStyle {
                 
                     if (i % 2 == 0) { 
                         Line basePair = new Line(leftX, leftY, rightX, rightY);
-                        basePair.setStroke(Color.RED);
+                        basePair.setStroke(Color.BLUE);
                         basePair.setStrokeWidth(1.5);
                         shapes.add(basePair);
                     }
