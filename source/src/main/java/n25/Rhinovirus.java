@@ -7,6 +7,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 public class Rhinovirus extends Virus{
@@ -18,7 +20,8 @@ public class Rhinovirus extends Virus{
 
         List<VirusComponent> components = List.of(
     /*0*/   new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN), 
-    /*1*/   new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLACK, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGENORENZYME)
+    /*1*/   new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN),
+    /*2*/   new Enzyme(center.clone(), radius, unitSize, Color.BLACK, Color.AZURE)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
@@ -27,24 +30,22 @@ public class Rhinovirus extends Virus{
     private List<Rhinovirus> rhinoviruses = new ArrayList<>();
     private List<Vector_2D> speeds = new ArrayList<>();
     private List<Nucleoid> nucleoids = new ArrayList<>();
-<<<<<<< Updated upstream
-=======
     private List<Enzyme> enzymes = new ArrayList<>();
 
     //Các biến dùng để vẽ thành phần virus
-    private List<Shape> shapes = new ArrayList<>();
-    private int circleCountForHexagon;
-    private int count;
-    private Location startLocation, endLocation;
-    private Vector_2D drawVector;
-    private List<Location> baseLocations = new ArrayList<>();
+    List<Shape> shapes = new ArrayList<>();
+    int circleCountForCircle;
+    int circleCountForHexagon;
+    int count;
+    Location startLocation, endLocation;
+    Vector_2D drawVector;
+    List<Location> baseLocations = new ArrayList<>();
 
->>>>>>> Stashed changes
     @Override
     public void displayInfection(Pane area, int timeSleep){
         virusStructure.draw(area);
         Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
-        Cell cell = new Cell(cellLocation, radius * 4, 5, Color.LIGHTBLUE, Color.BLACK);
+        Cell cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 
         // Giai đoạn 1:
@@ -55,35 +56,91 @@ public class Rhinovirus extends Virus{
             virusStructure.relocate(speed);
         }));
         getIn.setCycleCount(TIME / timeSleep);
-
-        // Giai đoạn 2:
-        // Virus tấn công tế bào
-        angle = 180;
-        Timeline attack = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
-        {
-            Location nucleusLocation = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
-            Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.GREEN);
-            nucleus.draw(area);
-            nucleoids.add(nucleus);
-            angle += 45;
-            // Location capsLocation = new Location(cellLocation.x + (int) (2 * radius *  Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
-            // Capsit caps = new Capsit(capsLocation, radius / 2, unitSize, Color.AQUA, Color.BLUE, ComponentStyle.CIRCLE_STYLE, SubComponentType.ANTIGEN);
-            // caps.draw(area);
-            // capsits.add(caps);
+        
+        //Giai đoạn 2: Virus tổng hợp nucleoid và enzyme
+        Timeline synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> {
+        // Tính toán vị trí dựa trên góc hiện tại
+        Location synthesisLocation = new Location(
+        cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))),
+        cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle)))
+        );
+        // Tạo và vẽ enzyme
+        Enzyme enzyme = new Enzyme(synthesisLocation.clone(), radius , unitSize, Color.BROWN, Color.AQUAMARINE);
+        enzyme.draw(area);
+        enzymes.add(enzyme);
+        // Tạo và vẽ nucleoid
+        Nucleoid nucleoid = new Nucleoid(synthesisLocation.clone(), radius / 2, unitSize, Color.GREEN);
+        nucleoid.draw(area);
+        nucleoids.add(nucleoid);
+        // Lưu vị trí cơ sở
+        baseLocations.add(synthesisLocation);
+        // Tăng góc để chuẩn bị cho vòng lặp tiếp theo
+        angle += 90;
         }));
-        attack.setCycleCount(8);
+        synthesis.setCycleCount(3); 
 
-        // Giai đoạn 3:
+        // Giai đoạn 3: 
+        // Virus hoàn thiện các thành phần khác
+        // Tạo vỏ capsit
+        circleCountForHexagon = (int) (radius / (2 * unitSize));
+        Timeline createCapsit = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        {
+            if (count == circleCountForHexagon)
+            {
+                count = 0;
+                angle += 60;
+                startLocation = endLocation.clone();
+                endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
+            }
+            drawVector = new Vector_2D(startLocation.x + (endLocation.x - startLocation.x) * count / circleCountForHexagon, startLocation.y + (endLocation.y - startLocation.y) * count / circleCountForHexagon);
+            for (Location baseLocation : baseLocations)
+            {
+                Location newLocation = baseLocation.add(drawVector);
+                Circle circle = new Circle(newLocation.x, newLocation.y, unitSize);
+                circle.setFill(Color.GOLD);
+                shapes.add(circle);
+                area.getChildren().add(circle);
+            }
+            count++;
+        }));
+        createCapsit.setCycleCount(6 * circleCountForHexagon);
+
+         // Giai đoạn 4:
+        // Tạo các thành phần phụ của virus
+        // Tạo antigen
+        Timeline createAntigen = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        {
+            if (count == 3)
+            {
+                count = 0;
+                angle += 60;
+                startLocation = endLocation.clone();
+                endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
+            }
+            drawVector = new Vector_2D(startLocation.x + (endLocation.x - startLocation.x) * count / 3, startLocation.y + (endLocation.y - startLocation.y) * count / 3);
+            for (Location baseLocation : baseLocations)
+            {
+                Location newLocation = baseLocation.add(drawVector);
+                Circle circle = new Circle(newLocation.x, newLocation.y, 2 * unitSize);
+                circle.setFill(Color.BLUE);  
+                shapes.add(circle);
+                area.getChildren().add(circle);
+            }
+            count++;
+        }));
+        createAntigen.setCycleCount(18);
+
+        // Giai đoạn 5:
         // Virus thoát khỏi tế bào
         // Khởi tạo speeds
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 4; i++)
         {
-            Vector_2D speedRhino = new Vector_2D((int) (3 * radius * timeSleep / TIME * Math.cos(Math.toRadians(180 + i * 45))), (int) (3 * radius * timeSleep / TIME * Math.sin(Math.toRadians(180 + i * 45))));
-            speeds.add(speedRhino);
+            Vector_2D speedRHINO = new Vector_2D((int) (3 * radius * timeSleep / TIME * Math.cos(Math.toRadians(180 + i * 90))), (int) (3 * radius * timeSleep / TIME * Math.sin(Math.toRadians(180 + i * 90))));
+            speeds.add(speedRHINO);
         }
         Timeline getOut = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 4; i++)
             {
                 rhinoviruses.get(i).virusStructure.relocate(speeds.get(i));
             }
@@ -95,27 +152,50 @@ public class Rhinovirus extends Virus{
         getIn.play();
 
         // Giai đoạn 2:
-        angle = 216;
+        angle = 270;
         getIn.setOnFinished(e -> 
         {
-            virusStructure.components.get(0).dispose();
             virusStructure.components.get(1).dispose();
-            virusStructure.components.get(2).dispose();
-            attack.play();
+            baseLocations.clear();
+            baseLocations.add(virusStructure.getCenter());
+            synthesis.play();
         });
 
-        // Giai đoạn 3:
-        attack.setOnFinished(e -> 
+         // Giai đoạn 3:
+         synthesis.setOnFinished( e -> 
+         {
+             count = 0;
+             angle = -30;
+             startLocation = new Location(0, -radius);
+             endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
+             createCapsit.play();
+         });
+
+          // Giai đoạn 4:
+        createCapsit.setOnFinished(e -> 
         {
+            count = 0;
+            angle = -30;
+            startLocation = new Location(0, -radius);
+            endLocation = new Location((int) (radius * Math.cos(Math.toRadians(angle))), (int) (radius * Math.sin(Math.toRadians(angle))));
+            createAntigen.play();
+        });
+
+        // Giai đoạn 5: 
+        createAntigen.setOnFinished(e -> 
+        {
+            shapes.forEach(shape -> area.getChildren().remove(shape));
+            shapes.clear();
             cell.dispose();
             nucleoids.forEach(nucleoid -> nucleoid.dispose());
             nucleoids.clear();
+            shapes.forEach(shape -> area.getChildren().remove(shape));
+            shapes.clear();
             rhinoviruses.clear();
             rhinoviruses.add(this);
-            for (int i = 1; i < 8; i++)
+            for (int i = 1; i < 4; i++)
             {
-                Location newRHINOCenter = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(180 + i * 45))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(180 + i * 45))));
-                Rhinovirus rhinovirus = new Rhinovirus("RHINOVIRUS", newRHINOCenter, radius, unitSize);
+                Rhinovirus rhinovirus = new Rhinovirus("RHINO", baseLocations.get(i), radius, unitSize);
                 rhinovirus.displayStructure(area);
                 rhinoviruses.add(rhinovirus);
             }
