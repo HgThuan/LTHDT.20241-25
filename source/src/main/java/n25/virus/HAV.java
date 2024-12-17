@@ -223,4 +223,42 @@ public class HAV extends Virus {
             getOut.play();
         });
     }
+
+    private Timeline pausedTimeline;
+    public void pause()
+    {
+        if (getIn.getStatus() == Timeline.Status.RUNNING)
+        {
+            pausedTimeline = getIn;
+            getIn.pause();
+        }
+        else if (synthesis.getStatus() == Timeline.Status.RUNNING)
+        {
+            pausedTimeline = synthesis;
+            synthesis.pause();
+        }
+        else if (createCapsit.getStatus() == Timeline.Status.RUNNING)
+        {
+            pausedTimeline = createCapsit;
+            createCapsit.pause();
+        }
+        else if (createAntigen.getStatus() == Timeline.Status.RUNNING)
+        {
+            pausedTimeline = createAntigen;
+            createAntigen.pause();
+        }
+        else if (getOut.getStatus() == Timeline.Status.RUNNING)
+        {
+            pausedTimeline = getOut;
+            getOut.pause();
+        }
+    }
+
+    public void resume()
+    {
+        if (pausedTimeline != null)
+        {
+            pausedTimeline.play();
+        }
+    }
 }
