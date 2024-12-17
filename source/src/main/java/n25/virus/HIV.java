@@ -342,6 +342,6 @@ public class HIV extends Virus {
         super.dispose();
         nucleoids.forEach(nucleoid -> nucleoid.dispose());
         enzymes.forEach(enzyme -> enzyme.dispose());
-        hivs.forEach(hav -> hav.dispose());
+        hivs.forEach(hiv -> hiv.dispose());
     }
 }
