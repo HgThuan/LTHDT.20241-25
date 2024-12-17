@@ -49,6 +49,14 @@ public class HAV extends Virus {
     Location startLocation, endLocation;
     Vector_2D drawVector;
     List<Location> baseLocations = new ArrayList<>();
+
+    // Khai báo các giai đoạn
+    private Timeline getIn;
+    private Timeline synthesis;
+    private Timeline createCapsit;
+    private Timeline createAntigen;
+    private Timeline getOut;
+
     @Override
     public void displayInfection(Pane area, int timeSleep) {
         virusStructure.draw(area);
@@ -59,16 +67,26 @@ public class HAV extends Virus {
         // Giai đoạn 1:
         // Virus xâm nhập vào tế bào
         Vector_2D speed = new Vector_2D(5 * radius * timeSleep / TIME, 0);
-        Timeline getIn = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        getIn = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
+            if (stopFlag)
+            {
+                getIn.stop();
+                return;
+            }
             virusStructure.relocate(speed);
         }));
         getIn.setCycleCount(TIME / timeSleep);
         
         // Giai đoạn 2:
         // Virus tổng hợp nucleoid
-        Timeline synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
+        synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
         {
+            if (stopFlag)
+            {
+                synthesis.stop();
+                return;
+            }
             Location nucleusLocation = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(angle))));
             baseLocations.add(nucleusLocation);
             Nucleoid nucleus = new Nucleoid(nucleusLocation, radius / 2, unitSize, Color.RED);
@@ -82,8 +100,13 @@ public class HAV extends Virus {
         // Virus hoàn thiện các thành phần khác
         // Tạo vỏ capsit
         circleCountForHexagon = (int) (radius / (2 * unitSize));
-        Timeline createCapsit = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        createCapsit = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
+            if (stopFlag)
+            {
+                createCapsit.stop();
+                return;
+            }
             if (count == circleCountForHexagon)
             {
                 count = 0;
@@ -107,7 +130,7 @@ public class HAV extends Virus {
         // Giai đoạn 4:
         // Tạo các thành phần phụ của virus
         // Tạo antigen
-        Timeline createAntigen = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        createAntigen = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             if (count == 3)
             {
@@ -137,7 +160,7 @@ public class HAV extends Virus {
             Vector_2D speedHAV = new Vector_2D((int) (3 * radius * timeSleep / TIME * Math.cos(Math.toRadians(180 + i * 90))), (int) (3 * radius * timeSleep / TIME * Math.sin(Math.toRadians(180 + i * 90))));
             speeds.add(speedHAV);
         }
-        Timeline getOut = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        getOut = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             for (int i = 0; i < 4; i++)
             {

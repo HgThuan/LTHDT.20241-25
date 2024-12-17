@@ -10,6 +10,9 @@ public abstract class Virus {
     protected int radius;
     protected int unitSize;
     
+    public boolean stopFlag = false;
+    public String status = "";
+    
     public String type()
     {
         if (isEnvelopedVirus)
