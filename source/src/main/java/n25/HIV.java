@@ -12,7 +12,7 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 public class HIV extends Virus {
-    private final int TIME = 1500;
+    private final int TIME = 5000;
     public HIV(String name, Location center, int radius, int unitSize)
     {
         this.name = name;
@@ -20,10 +20,10 @@ public class HIV extends Virus {
         this.unitSize = unitSize;
 
         List<VirusComponent> components = List.of(
-            new MatrixProtein(center.clone(), radius + radius/2, unitSize, Color.RED, Color.BLUE, 0),
+            new MatrixProtein(center.clone(), (int) (1.35 * radius), unitSize, Color.RED, Color.BLUE, 0),
             new Nucleoid(center.clone(), radius / 2, unitSize, Color.GREEN),
             new Capsit(center.clone(), radius, unitSize, Color.GOLD, Color.BLUE, ComponentStyle.HEXAGON_STYLE, SubComponentType.ANTIGEN),
-            new Envelope(center.clone(), radius + radius, unitSize, Color.YELLOW, Color.RED, SubComponentType.GLYCOPROTEIN)
+            new Envelope(center.clone(), (int) (1.5 * radius), unitSize, Color.YELLOW, Color.RED, SubComponentType.GLYCOPROTEIN)
         );
         VirusStructure virusStructure = new VirusStructure(components, center);
         this.virusStructure = virusStructure;
@@ -45,13 +45,13 @@ public class HIV extends Virus {
     public void displayInfection(Pane area, int timeSleep) {
         virusStructure.draw(area);
         Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
-        Cell cell = new Cell(cellLocation, radius * 6, 5, Color.LIGHTBLUE, Color.BLACK);
+        Cell cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
         cell.draw(area);
         // Thiết lập các giai đoạn 
         // Giai đoạn 1:
         // Virus xâm nhập vào tế bào
         Vector_2D speed = new Vector_2D(5 * radius * timeSleep / TIME, 0);
-        Timeline getIn = new Timeline(new KeyFrame(Duration.millis(timeSleep * 3), e -> 
+        Timeline getIn = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
         {
             virusStructure.relocate(speed);
         }));
@@ -59,7 +59,7 @@ public class HIV extends Virus {
         
         // Giai đoạn 2:
         // Virus tổng hợp nucleoid
-        Timeline synthesis = new Timeline(new KeyFrame(Duration.millis(TIME), e -> 
+        Timeline synthesis = new Timeline(new KeyFrame(Duration.millis(TIME / 8), e -> 
         {
             Location nucleusLocation = new Location(cellLocation.x + (int) ((3) * radius * Math.cos(Math.toRadians(angle))), cellLocation.y + (int) ((3) * radius * Math.sin(Math.toRadians(angle))));
             baseLocations.add(nucleusLocation);
@@ -123,21 +123,21 @@ public class HIV extends Virus {
 
         // Giai đoạn 5: 
         // Tạo MatrixProtein
-        int circleCount = (int) (Math.PI * radius / (unitSize * 1) );
-        Timeline createMatrixProtein = new Timeline(new KeyFrame(Duration.millis(timeSleep / 3 * 2), e -> {
+        int circleCount = (int) (1.35 * Math.PI * radius /unitSize);
+        Timeline createMatrixProtein = new Timeline(new KeyFrame(Duration.millis(timeSleep / 2), e -> {
             // Góc hiện tại dựa trên bộ đếm
-            double angle = 1.5 * Math.PI * count / circleCount;
+            double angle = 2 * Math.PI * count / circleCount;
         
             // Vector để tính tọa độ điểm hiện tại trên vòng tròn
             drawVector = new Vector_2D(
-                (int) (1.5 * radius * Math.cos(angle)), // Xét theo trục X
-                (int) (1.5 * radius * Math.sin(angle))  // Xét theo trục Y
+                (int) (1.35 * radius * Math.cos(angle)), // Xét theo trục X
+                (int) (1.35 * radius * Math.sin(angle))  // Xét theo trục Y
             );
         
             // Vẽ từng điểm trên vòng tròn với baseLocations làm tâm
             for (Location baseLocation : baseLocations) {
                 Location newLocation = baseLocation.add(drawVector);
-                Circle circle = new Circle(newLocation.x, newLocation.y, 1.1 * unitSize); // Bán kính điểm là 2 * unitSize
+                Circle circle = new Circle(newLocation.x, newLocation.y, unitSize); 
                 circle.setFill(Color.RED); // Màu sắc của điểm
                 shapes.add(circle);
                 area.getChildren().add(circle);
@@ -146,18 +146,19 @@ public class HIV extends Virus {
             // Tăng bộ đếm để vẽ điểm tiếp theo
             count++;
         }));
-        createMatrixProtein.setCycleCount(circleCount * 27 / 20 + 5);
+        createMatrixProtein.setCycleCount(circleCount);
+
         // Giai đoạn 6: 
         // Tạo Envelope
-        int circleCountForEnvelope = (int) (Math.PI * radius / (unitSize * 9 / 10) );
-        Timeline createEnvelope = new Timeline(new KeyFrame(Duration.millis(timeSleep / 3), e -> {
+        int circleCountForEnvelope = (int) (1.5 * Math.PI * radius / unitSize);
+        Timeline createEnvelope = new Timeline(new KeyFrame(Duration.millis(timeSleep / 2), e -> {
             // Góc hiện tại dựa trên bộ đếm
             double angle = 2 * Math.PI * count / circleCountForEnvelope;
         
             // Vector để tính tọa độ điểm hiện tại trên vòng tròn
             drawVector = new Vector_2D(
-                (int) (2 * radius * Math.cos(angle)), // Xét theo trục X
-                (int) (2 * radius * Math.sin(angle))  // Xét theo trục Y
+                (int) (1.5 * radius * Math.cos(angle)), // Xét theo trục X
+                (int) (1.5 * radius * Math.sin(angle))  // Xét theo trục Y
             );
         
             // Vẽ từng điểm trên vòng tròn với baseLocations làm tâm
@@ -172,38 +173,35 @@ public class HIV extends Virus {
             // Tăng bộ đếm để vẽ điểm tiếp theo
             count++;
         }));
-        createEnvelope.setCycleCount(circleCount * 2);
-// Giai đoạn 7:
-// Tạo các thành phần phụ của virus
-// Tạo glycoprotein
+        createEnvelope.setCycleCount(circleCountForEnvelope);
 
-Timeline createGlycoProtein = new Timeline(new KeyFrame(Duration.millis(timeSleep * 2.5), e -> 
-{
+        // Giai đoạn 7:
+        // Tạo các thành phần phụ của virus
+        // Tạo glycoprotein
+        Timeline createGlycoProtein = new Timeline(new KeyFrame(Duration.millis(timeSleep), e -> 
+        {
+            double angle = 2 * Math.PI * count / 15;
+            drawVector = new Vector_2D(
+                (int) (1.5 * radius * Math.cos(angle)), // Xét theo trục X
+                (int) (1.5 * radius * Math.sin(angle))  // Xét theo trục Y
+            );
 
-    double angle = 2 * Math.PI * count / 9;
-
-    drawVector = new Vector_2D(
-        (int) (2 * radius * Math.cos(angle)), // Xét theo trục X
-        (int) (2 * radius * Math.sin(angle))  // Xét theo trục Y
-    );
-
-    for (Location baseLocation : baseLocations) {
-        Location newLocation = baseLocation.add(drawVector);
+            for (Location baseLocation : baseLocations) {
+                Location newLocation = baseLocation.add(drawVector);
+                
+                Glycoprotein glycoProtein = new Glycoprotein(
+                    newLocation,
+                    (int)(angle * 180 / Math.PI), 
+                    unitSize, 
+                    Color.RED
+                );
+                glycoProtein.draw(area);
+                shapes.addAll(glycoProtein.shapes);
+            }
+            count++;
+        }));
+        createGlycoProtein.setCycleCount(15);
         
-        Glycoprotein glycoProtein = new Glycoprotein(
-            newLocation, 
-            (int)(angle * 180 / Math.PI), 
-            unitSize, 
-            Color.RED
-        );
-        glycoProtein.draw(area);
-        shapes.addAll(glycoProtein.shapes);
-
-    }
-
-    count++;
-    }));
-    createGlycoProtein.setCycleCount(9);
         // Giai đoạn 8:
         // Virus thoát khỏi tế bào
         // Khởi tạo speeds
@@ -282,7 +280,6 @@ Timeline createGlycoProtein = new Timeline(new KeyFrame(Duration.millis(timeSlee
         });
         createGlycoProtein.setOnFinished(e -> 
         {
-            // Xóa các glycoprotein ngay sau khi vẽ
             shapes.forEach(shape -> area.getChildren().remove(shape));
             shapes.clear();
             cell.dispose();
@@ -294,8 +291,7 @@ Timeline createGlycoProtein = new Timeline(new KeyFrame(Duration.millis(timeSlee
             hivs.add(this);
             for (int i = 1; i < 4; i++)
             {
-                Location newHIVCenter = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(180 + i * 90))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(180 + i * 90))));
-                HIV hiv = new HIV("HIV", newHIVCenter, radius, unitSize);
+                HIV hiv = new HIV("HIV", baseLocations.get(i), radius, unitSize);
                 hiv.displayStructure(area);
                 hivs.add(hiv);
             }

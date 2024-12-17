@@ -28,7 +28,7 @@ public class ComponentStyle {
                 }
                 for (int i = 0; i < 30; i++)
                 {
-                    Location location = new Location(center.x + (int) (radius * Math.cos(Math.toRadians(i * 20))), center.y + (int) (radius * Math.sin(Math.toRadians(i * 20))));
+                    Location location = new Location(center.x + (int) (radius * Math.cos(Math.toRadians(i * 12))), center.y + (int) (radius * Math.sin(Math.toRadians(i * 12))));
                     result.add(location);
                 }
                 break;

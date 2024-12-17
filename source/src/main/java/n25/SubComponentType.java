@@ -19,6 +19,8 @@ public class SubComponentType {
         int glycoprotein = (subComponentStyle / 2) % 2;
         int spike = (subComponentStyle / 4) % 2;
         int numberOfSubComponents = antigen + glycoprotein + spike;
+        if (numberOfSubComponents == 0)
+            return;
         for (int i = 0; i < drawLocations.size();)
         {
             if (antigen == 1)

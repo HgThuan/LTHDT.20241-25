@@ -24,11 +24,11 @@ public class App extends Application {
         StackPane root = new StackPane();
         Pane pane = new Pane();
         // gọi phương thức vẽ hình tại đây. ví dụ antigen.draw(pane);
-        HAV hav = new HAV("HAV", new Location(200, 400), 50, 2);
+        HIV hav = new HIV("HAV", new Location(200,400), 50, 3);
         hav.displayInfection(pane, 100);
         //
         root.getChildren().add(pane);
-        scene = new Scene(root, 1000, 700);
+        scene = new Scene(root, 1000, 900);
         stage.setScene(scene);
         stage.show();
     }   

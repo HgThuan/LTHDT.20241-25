@@ -183,8 +183,7 @@ public class HAV extends Virus {
             havs.add(this);
             for (int i = 1; i < 4; i++)
             {
-                Location newHAVCenter = new Location(cellLocation.x + (int) (2 * radius * Math.cos(Math.toRadians(180 + i * 90))), cellLocation.y + (int) (2 * radius * Math.sin(Math.toRadians(180 + i * 90))));
-                HAV hav = new HAV("HAV", newHAVCenter, radius, unitSize);
+                HAV hav = new HAV("HAV", baseLocations.get(i), radius, unitSize);
                 hav.displayStructure(area);
                 havs.add(hav);
             }
