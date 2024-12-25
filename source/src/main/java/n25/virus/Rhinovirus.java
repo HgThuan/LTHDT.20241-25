@@ -43,6 +43,7 @@ public class Rhinovirus extends Virus{
 
     @Override
     public void displayInfection(Pane area, int timeSleep){
+        this.area = area;
         virusStructure.draw(area);
         Location cellLocation = new Location(virusStructure.getCenter().x + radius * 7, virusStructure.getCenter().y);
         cell = new Cell(cellLocation, radius * 3, 5, Color.LIGHTBLUE, Color.BLACK);

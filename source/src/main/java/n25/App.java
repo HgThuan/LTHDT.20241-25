@@ -127,7 +127,7 @@ public class App extends Application {
             {
                 Timeline statusUpdater = new Timeline();
                 statusUpdater.setCycleCount(Timeline.INDEFINITE);
-                statusUpdater.getKeyFrames().add(new KeyFrame(javafx.util.Duration.millis(1000), e2 -> {
+                statusUpdater.getKeyFrames().add(new KeyFrame(javafx.util.Duration.millis(100), e2 -> {
                     if (displayedVirus.status.equals("Completed"))
                     {
                         displayedVirus.dispose();
@@ -202,7 +202,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         Pane root = new Pane();
         root.getChildren().add(createSelectionPane());
-        scene = new Scene(root, 800, 600);
+        scene = new Scene(root, 1000, 650);
         stage.setScene(scene);
         stage.show();
     }

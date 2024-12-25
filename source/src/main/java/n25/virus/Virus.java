@@ -31,6 +31,7 @@ public abstract class Virus {
     protected final int TIME = 5000;
 
     // Các biến dùng để vẽ quá trình lây nhiễm của virus
+    protected Pane area;
     protected int angle;
     protected List<Virus> viruses = new ArrayList<>();
     protected List<Vector_2D> speeds = new ArrayList<>();
@@ -90,6 +91,10 @@ public abstract class Virus {
 
     public void dispose()
     {
+        if (area != null)
+        {
+            area.getChildren().removeAll(shapes);
+        }
         nucleoids.forEach(nucleoid -> nucleoid.dispose());
         enzymes.forEach(enzyme -> enzyme.dispose());
         for (Virus virus : viruses)

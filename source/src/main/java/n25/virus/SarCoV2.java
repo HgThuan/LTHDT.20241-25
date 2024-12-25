@@ -41,6 +41,7 @@ public class SarCoV2 extends Virus {
 
     @Override
     public void displayInfection(Pane area, int timeSleep){
+        this.area = area;
         virusStructure.draw(area);
         Location cellLocation = new Location(virusStructure.getCenter().x + radius * 8, virusStructure.getCenter().y);
         cell = new Cell(cellLocation, radius * 5, 5, Color.LIGHTBLUE, Color.BLACK);
